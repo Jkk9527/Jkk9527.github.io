@@ -1,615 +1,623 @@
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{setspace}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage{microtype}
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{array}
-\usepackage{enumitem}
+\usepackage{setspace}
 \usepackage{xurl}
-\usepackage[hidelinks]{hyperref}
-\usepackage[numbers]{natbib}
-\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
 
-% Numeric citations in parentheses, e.g. (1), (2)
-\bibpunct{(}{)}{,}{n}{}{,}
-\makeatletter
-\renewcommand\@biblabel[1]{(#1)}
-\makeatother
+\setstretch{1.12}
+\setcounter{secnumdepth}{4}
+\sloppy
 
-\setstretch{1.15}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.65em}
-\Urlmuskip=0mu plus 1mu
+\titleformat{\paragraph}[block]
+  {\normalfont\normalsize\bfseries}
+  {\theparagraph}
+  {1em}
+  {}
 
-\title{\textbf{From Audio Black Boxes to Searchable Knowledge:\\
-How AI Is Transforming Podcasting}}
-\author{Student Number: 24200136}
-\date{}
+\titlespacing*{\paragraph}
+  {0pt}
+  {1.1ex plus .2ex minus .2ex}
+  {0.5ex plus .1ex}
 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\setlist[itemize]{leftmargin=1.4em}
+\setlist[enumerate]{leftmargin=1.4em}
+
+\newcommand{\placeholderfigure}[3]{
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{0.88\linewidth}
+\textbf{Figure placeholder: #2}\\[0.4em]
+#3
+\end{minipage}
+}
+\caption{#2}
+\label{#1}
+\end{figure}
+}
+
+\usepackage{parskip} % 自动取消缩进并增加段间距
 \begin{document}
 
-\maketitle
+\noindent\textbf{Online version:} \url{https://jkk9527.github.io/}
 
-\noindent\textbf{Online version:} \url{INSERT-YOUR-ONLINE-BLOG-LINK-HERE}
+\vspace{1.2em}
+
+\begin{center}
+{\LARGE \textbf{Unlocking the Audio Black Box: How AI Turns Podcasts into Searchable Knowledge---and Who Benefits?}}\\[0.8em]
+{\large Student Number: 24200136}\\[0.4em]
+{\large May 2026}
+\end{center}
+
+\vspace{1em}
+
 
 \begin{abstract}
-Podcasting has become a major medium for journalism, education, business analysis, technology discussion, and cultural commentary. Its strength lies in long-form conversation: podcasts can preserve tone, hesitation, disagreement, and context in ways that short-form media often cannot. Yet this strength is also the source of its central weakness. Podcast knowledge is usually trapped inside long audio files. Users cannot easily search, skim, cite, translate, or navigate a three-hour conversation. Platforms also struggle to understand what is inside an episode when the available metadata consists mainly of titles, descriptions, categories, and listening histories.
-
-This report argues that the most important impact of AI on podcasting is not merely production automation, but knowledge transformation. AI can turn podcasts from audio objects that can only be played into machine-readable knowledge objects that can be transcribed, segmented, searched, summarised, translated, recommended, and cited. The core technical pipeline is: \textit{Audio} $\rightarrow$ \textit{Transcript} $\rightarrow$ \textit{Speaker labels} $\rightarrow$ \textit{Semantic chunks} $\rightarrow$ \textit{Search / Summary / Recommendation / Translation}. Automatic speech recognition converts audio into text; speaker diarization identifies who spoke when; semantic chunking divides long conversations into navigable knowledge units; embedding models and vector databases enable meaning-based search; retrieval-augmented generation and large language models produce grounded summaries and question-answering interfaces; recommendation systems use semantic metadata to improve discovery; and AI dubbing and audio enhancement expand accessibility and production quality.
-
-However, once AI begins to summarise, recommend, translate, and explain podcasts, it also becomes a powerful knowledge intermediary. This creates ethical questions about accuracy, fairness, ownership, privacy, voice rights, and labour. AI may make podcast knowledge easier to access, but it may also misrepresent nuanced conversations, amplify platform control over discovery, and extract value from creators if users consume AI-generated summaries instead of the original episodes. The central principle of responsible podcast AI should therefore be: \textbf{AI should unlock podcast knowledge, not extract it}.
+As podcasting has moved from a niche audio format into a mainstream channel for interviews, journalism, education, expert analysis and cultural discussion, it has created a paradox: podcasts are increasingly rich in knowledge, but still poor in navigability. Users cannot easily search for a specific idea, skim an episode's structure, cite a precise moment or reuse podcast knowledge without listening linearly. This blog argues that AI can unlock this ``audio black box'' by transforming podcasts from linear audio files into searchable knowledge objects through three steps: transcription makes speech machine-readable and attributable; semantic chunking and vector search make ideas findable; and retrieval-augmented summarisation makes podcast knowledge usable. Yet this transformation creates three ethical risks: AI may misrepresent what was said, shape which creators become visible, and extract value from creators without returning attention or revenue. Responsible podcast AI should therefore be designed as a bridge back to original listening, not as a platform-controlled substitute for it. AI should unlock podcast knowledge, not extract it.
 \end{abstract}
 
-%\tableofcontents
-%\newpage
-
-% VISUAL SUGGESTION: At the beginning of the online blog version, insert a two-panel hero image.
-% Left panel: a long audio waveform labelled "Traditional podcast: one long black box".
-% Right panel: transcript, search box, speaker labels, chapters, summary, translation, and recommendations.
-% Caption suggestion: "From audio black box to searchable knowledge."
 
 \section{Introduction: Podcast Knowledge Is Trapped in Audio}
 
-Imagine a student preparing an essay on climate policy. She remembers that a podcast guest once gave a detailed explanation of carbon taxes in a three-hour interview. The argument would be useful for her essay, but she cannot remember the exact timestamp. If the source were a book, article, or webpage, she could search keywords, skim headings, or jump to a cited paragraph. With a podcast, she is forced to scrub through a long audio file and guess where the relevant discussion occurred.
+Podcasting has become a major knowledge medium, but much of its value remains hidden because long-form audio is difficult to search, skim, cite and reuse. This is not just a small usability problem. It shapes whether podcasts can work as educational sources, journalistic evidence, research materials and discoverable creative work. The core argument of this blog is that AI can unlock podcast knowledge by converting audio into searchable knowledge objects, but this transformation also raises a social question: who benefits when AI becomes the interface through which podcast knowledge is accessed?
 
-This example captures the central problem of podcasting as a knowledge medium. Podcasts do not lack knowledge. On the contrary, they often contain rich explanations, expert interviews, political debates, educational content, business analysis, and cultural criticism. The problem is that this knowledge is locked inside audio. A two-hour episode is presented to the user as a single linear timeline. It is difficult to search, skim, cite, translate, and reuse. It is also difficult for platforms to understand at a fine-grained level.
+\subsection{Opening Story: The Student Who Cannot Find the Argument}
 
-This matters because podcasting is no longer a niche format. Edison Research's \textit{Infinite Dial 2026} reports that 58\% of Americans aged 12 or above consumed a podcast in the past month, and 45\% consumed a podcast in the past week \citep{edison2026}. The global podcasting market was estimated at USD 30.72 billion in 2024 and is projected to reach USD 131.13 billion by 2030 \citep{grandview2025}. Podcast Industry Insights reports that Podcast Index tracks more than 4.6 million podcasts and more than 162 million episodes \citep{podcastinsights2026index}. These figures show that podcasting has become a large-scale knowledge and entertainment infrastructure.
+Think of a moment when you remember an idea from a podcast, but not where it appeared. A student writing an essay may remember that a guest gave exactly the explanation she needs, but the episode is almost three hours long. She knows the answer is somewhere in the conversation, yet she has no index, no headings and no way to Ctrl-F the audio. The knowledge is there, but for practical purposes, it is hidden.
 
-The scale of the medium makes the ``audio black box'' problem more serious. Users face millions of shows and hundreds of millions of episodes. Creators face intense competition for attention. Platforms face the difficult task of recommending, moderating, and organising long-form audio content. AI becomes necessary because manual metadata creation cannot scale to such a large audio archive.
+This is the central weakness of podcasting as a knowledge medium: podcasts are rich in ideas, but poor in navigability. Unlike articles with headings and searchable paragraphs, a podcast episode is often just a progress bar. The listener can move forward or backward, but cannot easily see the intellectual structure of the conversation.
 
-This report develops a focused argument: AI can transform podcasting by making podcast knowledge machine-readable. Yet the same transformation gives platforms and models more power over how podcast knowledge is represented, discovered, and monetised. The goal should not be to replace listening. The goal should be to make listening more searchable, inclusive, verifiable, and rewarding for both audiences and creators.
+\subsection{The Central Problem: Podcasts Are Audio Black Boxes}
 
-\section{The Podcasting Domain and Its Current Challenges}
+Podcasts are not empty entertainment objects. They often contain interviews, educational explanations, journalism, business analysis and cultural discussion. Their value lies in long-form conversation: tone, hesitation, disagreement and context can all be preserved in ways that short-form media often lose. Yet this strength is also the source of the problem. A one-hour podcast is usually presented as a single linear audio file. Users cannot easily search inside it, skim its structure, cite a precise moment or reuse its ideas. So the problem is not content scarcity, but retrievability.
 
-\subsection{Podcasting as a Mainstream Knowledge Industry}
+The black-box problem also affects creators and platforms. Creators may publish valuable conversations, but platforms often see only a title, a short description and a few tags. Students and journalists may want to cite a claim, but they need a reliable timestamp and transcript. The knowledge is present, but it is not machine-readable, searchable or accountable.
 
-Podcasting combines features of radio, social media, online education, and long-form journalism. It is relatively cheap to produce, easy to distribute through RSS feeds and platform apps, and suitable for both professional media companies and independent creators. It also supports intimacy: listeners often feel that hosts and guests are speaking directly to them.
+\subsection{The AI Transformation: From Audio Object to Knowledge Object}
 
-The medium is increasingly multi-format. Edison Research notes that 57\% of Americans aged 12 or above have both listened to and watched a podcast, showing that podcasting is now a dual audio-video medium rather than a purely audio medium \citep{edison2026}. This shift strengthens the need for AI-based indexing because audiences now interact with podcast content across audio apps, video platforms, social clips, newsletters, and search engines.
+AI changes the status of a podcast. It can turn a podcast from a linear audio object into a structured knowledge object. As Figure~\ref{fig:pipeline} shows, the basic pipeline is: automatic speech recognition converts speech into a time-aligned transcript; speaker diarization estimates who spoke; semantic chunking divides the transcript into meaningful units; embeddings and vector search make those units findable; and retrieval-augmented generation produces summaries, answers and recommendations grounded in the original audio evidence.
 
-At the same time, open podcast metadata remains uneven. Podcasting 2.0 statistics show that more than 5.3 million episodes include transcripts through modern podcast namespace features, while Podcast Index tracks over 162 million episodes overall \citep{podcastinsights2026features,podcastinsights2026index}. The exact comparison depends on data source and definition, but the gap is clear: only a small share of the total podcast archive has rich, open, creator-controlled transcript metadata.
+\placeholderfigure
+{fig:pipeline}
+{The podcast AI pipeline from audio object to searchable knowledge object}
+{In the online version, draw a flow: raw audio $\rightarrow$ ASR transcript $\rightarrow$ speaker labels $\rightarrow$ semantic chunks $\rightarrow$ vector search $\rightarrow$ grounded summaries and recommendations, with governance controls below.}
 
-Major platforms have started to address this. Apple introduced searchable transcripts for Apple Podcasts, allowing users to read the full text of an episode, search for words or phrases, and tap text to play the corresponding moment \citep{apple2024transcripts}. Apple later stated that it had transcribed more than 100 million episodes across 13 supported languages \citep{apple2025transcribed}. Spotify for Creators has also introduced automatic transcripts, chapters, guests, and topics, and encourages creators to edit generated chapter labels and timestamps \citep{spotify2025}. These developments show that transcription and metadata are becoming core podcast infrastructure.
+This transformation matters because it changes what users can do. Instead of remembering the title, guest or exact wording, a user can search for the idea itself. Instead of listening linearly for three hours, a user can jump to the segment where the argument appears. The goal is not to remove listening, but to make listening easier to enter, verify and return to.
 
-% VISUAL SUGGESTION: Insert a data graphic here.
-% Suggested chart: three small panels showing:
-% (1) US monthly podcast consumption: 58%; weekly consumption: 45%.
-% (2) Global podcasting market: USD 30.72bn in 2024 -> USD 131.13bn in 2030.
-% (3) Podcast Index scale: 4.6m+ podcasts, 162m+ episodes, 5.3m+ episodes with Podcasting 2.0 transcripts.
+\subsection{The Central Ethical Tension}
 
-\subsection{User-Side Challenge: Podcasts Are Hard to Search, Skim, and Cite}
+The central ethical tension is this: who controls AI-mediated podcast knowledge? In other words, the key question is not only what AI can do for podcasting, but who benefits when AI controls how podcast knowledge is accessed.
 
-Text is naturally searchable. A reader can scan a table of contents, search a word, follow headings, and copy a quotation. Video platforms also provide thumbnails, captions, chapters, and visual cues. A podcast episode, by contrast, often appears as a title, a short description, and a progress bar.
+If AI produces transcripts, it affects accessibility. If AI generates summaries, it affects meaning. If AI recommends episodes, it affects visibility. If AI turns a podcast library into a conversational question-answering system, it affects monetisation. A podcast AI system may look like a simple convenience feature, but it can become a new gatekeeper between creators and audiences. This blog therefore argues for responsible podcast AI: AI should unlock knowledge without replacing, distorting or exploiting the original act of listening.
 
-This creates three user-side problems.
+\subsection{Roadmap of the Blog}
 
-First, podcasts are difficult to search internally. A user may remember that an expert discussed ``carbon pricing'', but the episode title may simply say ``Climate Policy with Dr Smith''. Without a transcript, the relevant passage is invisible to search engines and platform search.
+The remainder of the blog proceeds in four stages. Section 2 introduces podcasting as a mainstream knowledge medium and explains the access, discovery and governance challenges that make AI adoption attractive. Section 3 explains the technical pipeline that turns audio into searchable knowledge: transcription, semantic search and grounded summarisation. Section 4 examines the ethical implications, focusing on accuracy, fairness and ownership. Section 5 concludes by arguing that the future of podcast AI should be symbiotic rather than parasitic.
 
-Second, podcasts are difficult to skim. Users cannot easily decide whether a two-hour interview is worth listening to. They may need a short summary, a chapter list, or a set of key moments before committing attention.
+\section{Domain and Challenges}
 
-Third, podcasts are difficult to cite. Students, journalists, and researchers need precise references. A podcast without timestamped transcript is much harder to use as an academic or professional source than an article with paragraphs and page numbers.
+To understand why AI matters for podcasting, it is first necessary to understand the structural weakness of the medium: podcasts are rich in knowledge but poor in machine-readable metadata.
 
-\subsection{Accessibility Challenge: Without Transcripts, Some Users Are Excluded}
+\subsection{Podcasting as a Mainstream Knowledge Medium}
 
-The audio-only nature of podcasts also creates accessibility barriers. The World Health Organization reports that more than 430 million people require rehabilitation for disabling hearing loss, and by 2050 more than 700 million people are expected to have disabling hearing loss \citep{who2026}. For deaf and hard-of-hearing users, an audio-only podcast without a transcript is not merely inconvenient; it may be inaccessible.
+\subsubsection{Introduction of Podcast}
 
-The W3C Web Accessibility Initiative states that transcripts are required at WCAG Level A for prerecorded audio-only content such as podcasts \citep{w3c_transcripts}. Transcripts also benefit non-native speakers, users in noisy environments, students who want to revise key ideas, and users who prefer reading to listening.
+A podcast is usually understood as an episodic audio programme distributed through podcast apps, streaming platforms, RSS feeds or video platforms. In practice, the definition has widened, as many audiences now also treat video interviews on YouTube or Spotify as podcasts. The format is flexible: it can contain journalism, education, expert interviews, business analysis, comedy, cultural discussion or technical tutorials. This flexibility makes podcasting valuable for knowledge dissemination, because it preserves long-form explanation, voice, tone and interpersonal exchange.
 
-Accessibility should therefore not be treated as an optional enhancement. If podcasting is a major knowledge medium, then transcripts, captions, summaries, and translations are part of its public value.
+For knowledge work, this is both powerful and awkward. The medium fits daily life because it can be consumed while walking, commuting or doing routine work. But it does not fit search very well. A user can absorb a long conversation and later struggle to retrieve the exact argument. The podcast is therefore a mainstream knowledge medium with a serious retrieval problem.
 
-% VISUAL SUGGESTION: Insert an accessibility funnel here.
-% Suggested graphic: potential audience -> users who can hear the source language -> users who can understand the content -> users who can search/cite/reuse it.
-% Add arrows showing how transcript, translation, captions, and summary widen access.
+\subsubsection{The Scale of the Industry}
 
-\subsection{Creator-Side Challenge: Good Content Is Not Always Discoverable}
+The scale of podcasting shows why this problem matters. Edison Research reported in \textit{The Podcast Consumer 2025} that 73\% of Americans aged 12 or older had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week \cite{Edison2025}. Globally, DataReportal reported that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{DataReportal2025}. YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem \cite{YouTube2025}. These figures matter because they show that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium.
 
-Podcast discovery is weaker than short-video discovery. Short-video platforms receive many behavioural signals: swipes, replays, likes, comments, shares, visual features, captions, and thumbnails. Podcasts produce slower and sparser signals. A user may listen passively for an hour, and the platform may not know which moment was valuable.
+The commercial market has grown as well. According to the IAB/PwC \textit{Internet Advertising Revenue Report: Full Year 2025}, U.S. podcast advertising revenue reached \$2.9 billion in 2025 \cite{IAB2026}. These numbers are measured differently across audio podcasts, video podcasts and streaming talk shows, but they point in the same direction: podcasting is no longer a niche format. It is a large media and knowledge industry.
 
-This produces a cold-start problem for new creators. A new show may contain excellent analysis, but without listening history, strong metadata, or celebrity guests, it may not be recommended. Titles and descriptions are often too coarse to represent what is actually inside an episode.
+\subsection{Three Bottlenecks in Podcast Knowledge Access}
 
-AI-generated transcript metadata can help. If a platform can identify that a new episode contains a high-quality discussion of carbon taxes, copyright law, or remote work culture, it can recommend the relevant segment to interested users even when the show has little historical data. This shifts discovery from show-level popularity to segment-level relevance.
+Podcasting is changing from a casual audio format into a searchable and platform-mediated knowledge environment. This change creates three main bottlenecks: users cannot easily access knowledge inside long episodes; creators are hard to discover without rich metadata; and platforms cannot easily moderate or recommend long audio.
 
-\subsection{Platform-Side Challenge: Long Audio Is Difficult to Moderate and Organise}
+\subsubsection{Access Challenge: Users Cannot Search, Skim or Cite Podcasts}
 
-Platforms must also moderate harmful content and copyright violations. Text can be scanned with keyword systems and classifiers. Images and videos can be processed with visual models. Long-form audio is harder: a harmful claim, copyrighted song, or hateful statement may appear in a specific minute of a long episode.
+For users, the problem is not that podcasts are uninformative; it is that their information is difficult to access without listening linearly.
 
-Without transcription and segmentation, platforms must either rely on user reports or perform expensive manual review. AI therefore has operational value: it can create transcripts, identify topics, flag risky claims, detect music segments, and route uncertain cases to human reviewers.
+\paragraph{Searchability Problem}
 
-However, this also creates governance risk. Automated moderation systems can misunderstand sarcasm, quotation, academic discussion, or cultural context. If creators are penalised by opaque models, AI becomes not only a moderation tool but a black-box judge. This issue is discussed later in the ethics section.
+Users cannot easily search and locate ideas inside long episodes. If a listener wants a five-minute discussion of climate policy inside a three-hour interview, the title and description may not help. The speaker may also use different words from the user's query. A search for ``carbon tax'' may miss a segment where the guest says ``set a price for emissions''.
 
-\section{AI and Machine Learning Technologies in Podcasting}
+This is a semantic problem, not only a text problem. Even if a transcript exists, the transcript may still be too long. Good podcast search should retrieve ideas, arguments and moments, not only whole episodes.
 
-The central AI transformation in podcasting can be understood as a pipeline:
+\paragraph{Skimming Problem}
 
-\[
-\text{Audio} \rightarrow \text{Transcript} \rightarrow \text{Speaker Labels} \rightarrow \text{Semantic Chunks} \rightarrow \text{Search / Summary / Recommendation / Translation}
-\]
+Users also cannot quickly judge whether an episode is worth listening to. Articles can be scanned for titles, subheadings and paragraphs. Podcasts usually only have titles and progress bars. This makes the cost of evaluation high. A student may need only one argument, but must invest a large amount of time before knowing whether the episode contains it.
 
-Each stage adds structure. Raw audio becomes text. Text becomes attributed speech. Long transcripts become topic-based chunks. Chunks become searchable vectors. Search results become grounded summaries and recommendations. Translation and dubbing then extend the content across languages.
+\paragraph{Citation Problem}
 
-% VISUAL SUGGESTION: Insert the main technical pipeline here.
-% Suggested flow diagram:
-% Raw audio -> Noise reduction -> ASR -> Speaker diarization -> Timestamp alignment -> Semantic chunking -> Embeddings/vector database -> LLM summarisation/RAG -> Recommendation/translation/dubbing.
-% Under each box, add model examples: Whisper, wav2vec 2.0, pyannote.audio, SBERT, DPR, RAG, VALL-E, Voicebox, Demucs.
+Students, journalists and researchers need precise references. A written source can be cited by page, paragraph or section. A podcast needs an episode title, date, speaker and timestamp. Without a reliable transcript and timestamp, it is difficult to quote accurately or verify context. Accessibility is part of the same access challenge: the World Health Organization states that more than 1.5 billion people worldwide live with some degree of hearing loss, and that by 2050 nearly 2.5 billion people are projected to have some degree of hearing loss \cite{WHO2026}.
 
-\subsection{Automatic Speech Recognition: Converting Audio into Text}
+\subsubsection{Discovery Challenge: Creators Are Hard to Find Without Rich Metadata}
 
-Automatic Speech Recognition, or ASR, is the foundation of podcast AI. Its task is to convert speech audio into text. In a podcast context, ASR takes an audio waveform and produces a transcript, ideally with word-level timestamps and confidence scores.
+Without richer semantic metadata, creators with valuable knowledge may remain invisible simply because platforms cannot understand what their episodes contain.
 
-Modern ASR is largely based on deep learning. Systems may use convolutional layers or Transformer encoders to represent acoustic signals, and then decode them into text using sequence-to-sequence architectures, connectionist temporal classification, attention mechanisms, or related methods. Recent ASR systems benefit from large-scale weak supervision and self-supervised learning.
+\paragraph{Metadata Is Too Thin}
 
-OpenAI's Whisper is a major example. It was trained on 680,000 hours of multilingual and multitask supervised audio data collected from the web, enabling transcription, speech translation, and language identification across diverse accents, background noise, and technical language \citep{whisper2022}. Another important model family is wav2vec 2.0, which learns speech representations from raw audio through self-supervised pretraining. Baevski et al. show that wav2vec 2.0 can achieve strong performance with limited labelled data; using only ten minutes of labelled data and pretraining on 53,000 hours of unlabelled data, it achieved 4.8/8.2 WER on LibriSpeech test-clean/test-other \citep{wav2vec2020}.
+Titles and descriptions cannot represent a two-hour conversation. A podcast episode may begin with a personal story, move into economic policy, discuss public health, and finish with cultural commentary. Thin metadata hurts creators because it hides their real value. Spotify research has studied the use of semantic information to recommend underserved podcasts and reduce rich-get-richer effects in discovery \cite{Aziz2021Underserved}. This shows that semantic metadata is not just a technical convenience; it can affect whose voices become visible.
 
-For podcasting, ASR solves several problems at once. It makes internal episode search possible. It enables transcripts for accessibility. It creates input for summarisation, translation, semantic search, recommendation, and moderation. It also allows audio to become web-indexable text, improving discoverability beyond podcast apps.
+\paragraph{Cold-Start Problem}
 
-ASR quality is usually measured by Word Error Rate, or WER. WER counts insertions, deletions, and substitutions relative to a reference transcript. For podcasts, average WER is not enough. Platforms also need to measure performance across accents, dialects, genders, ages, languages, and audio conditions. Koenecke et al. found that major ASR systems produced substantially higher error rates for Black speakers than for white speakers, showing that ASR can encode unequal access to machine-readable speech \citep{koenecke2020}. In podcasting, such bias matters because a misrecognised voice becomes less searchable, less quotable, and less likely to be fairly represented by downstream AI systems.
+New creators lack listening history and platform signals. Popular creators already have downloads, ratings, shares and user behaviour data. New creators often do not. If platforms depend heavily on popularity signals, they may repeatedly recommend already successful shows. Semantic understanding can partly address this problem by recommending content because of what it contains, not only because the creator is already famous.
 
-\subsection{Speaker Diarization: Identifying Who Spoke When}
+\subsubsection{Governance Challenge: Platforms Cannot Easily Moderate or Recommend Long Audio}
 
-Podcasts are often conversations. A transcript without speaker labels is useful, but incomplete. In an interview, the distinction between host, guest, co-host, and caller is essential. Speaker diarization answers the question: \textit{who spoke when?}
+\paragraph{Moderation Problem}
 
-A typical diarization pipeline includes voice activity detection, speaker segmentation, speaker embedding, and clustering. The system first identifies speech regions, then detects likely speaker changes, then represents speech segments as embeddings, and finally groups segments that likely belong to the same speaker. The pyannote.audio 2.1 speaker diarization pipeline, for example, consists of speaker segmentation, neural speaker embedding, and global agglomerative clustering \citep{pyannote2023}.
+Harmful claims may appear in specific minutes. A two-hour podcast can be mostly harmless but contain one defamatory statement, one health misinformation claim, one copyrighted music clip or one hateful remark. Episode-level moderation is too blunt. It may miss harmful segments, or it may punish an entire episode for a short passage. Long audio is therefore a potential blind spot for platform governance.
 
-This is especially important for knowledge reliability. Without speaker labels, an AI summary may attribute a question to the guest, treat a challenge as a conclusion, or merge opposing viewpoints. With speaker diarization, a podcast segment can be represented more accurately:
+\paragraph{Recommendation Problem}
 
-\begin{quote}
-Speaker A, 00:12:03--00:12:40: Defines carbon pricing.\\
-Speaker B, 00:12:41--00:14:10: Explains political resistance to carbon taxes.\\
-Speaker A, 00:14:11--00:15:00: Asks whether low-income households would be harmed.\\
-Speaker B, 00:15:01--00:17:30: Describes revenue recycling as a policy response.
-\end{quote}
+Episode-level recommendation is less precise than segment-level relevance. A user may not want the whole episode; they may want the ten-minute part that matches their interest. Segment-level recommendation can connect users to relevant moments across different episodes, but it also gives platforms more power to decide which segments count as relevant.
 
-The main evaluation metric is Diarization Error Rate, or DER, which combines missed speech, false alarm speech, and speaker confusion. For podcasts, speaker confusion is particularly damaging because it can cause false attribution. A summary is not trustworthy if it correctly captures a statement but assigns it to the wrong person.
+\subsection{The Case for AI Adoption}
 
-% VISUAL SUGGESTION: Insert a speaker timeline here.
-% Suggested graphic: a horizontal timeline with coloured bars for Speaker A, Speaker B, and Speaker C.
-% Below the timeline, show transcript snippets aligned to timestamps.
-% Caption: "Speaker diarization turns conversation into attributable knowledge."
+Manual tagging cannot scale to modern podcasting. Human transcription is useful, but expensive and time-consuming. Manual chapter writing is valuable, but many independent creators do not have the resources to do it. As podcast libraries grow, the only practical way to convert raw, unstructured audio into searchable knowledge is to use AI and machine learning.
 
-\subsection{Semantic Chunking: Turning Long Transcripts into Knowledge Units}
+This shift is already visible in mainstream products. Apple introduced transcripts for Apple Podcasts with iOS 17.4, making podcast audio readable and searchable across many countries and regions \cite{Apple2024Transcripts}. Spotify now supports transcript management, automatic episode chapters and natural-language podcast discovery features \cite{Spotify2025Transcripts,Spotify2025Chapters,Spotify2026Prompted}. These examples show that AI transcription and semantic navigation are becoming ordinary podcast infrastructure rather than experimental add-ons.
 
-After transcription and diarization, the next problem is length. A three-hour podcast may produce tens of thousands of words. A full transcript is searchable, but it may still be too long to navigate. Semantic chunking divides the transcript into coherent topic-based units.
+The case for AI adoption is therefore strong. AI can decode speech into text, structure long conversations, support semantic search, improve accessibility, generate summaries and make creators easier to discover. But the case for adoption is not the same as the case for unrestricted deployment. AI solves the audio black-box problem only if it is designed to preserve accuracy, fairness and creator value.
 
-A simple system might split an episode every five minutes. A better system uses meaning. It can combine timestamp boundaries, speaker turns, topic shifts, discourse markers, keyword changes, embedding similarity, and large language model analysis. The goal is to identify natural sections such as ``introduction to carbon taxes'', ``distributional concerns'', ``international examples'', ``host challenge'', and ``guest response''.
+\section{AI Technologies Application: Three Steps from Audio to Searchable Knowledge}
 
-Chunk size matters. If chunks are too short, search results lose context. If chunks are too long, retrieval becomes imprecise. In practice, a podcast chunk might contain 300--800 words, with overlap between adjacent chunks to preserve context. Each chunk can be stored with start time, end time, speaker labels, transcript text, summary, keywords, named entities, and an embedding.
+The most important AI transformation in podcasting can be understood through three technical functions: AI decodes speech into text, structures long transcripts into searchable knowledge units, and mediates access through summaries, question-answering and recommendations.
 
-This is the step where a podcast begins to become a knowledge database. Instead of returning an entire two-hour episode, a search system can return a precise segment from 42:10 to 47:35 with a short description and a link to the original audio.
+\subsection{Transcription: Making Podcast Audio Machine-Readable}
 
-\subsection{Embeddings, Vector Search, and Semantic Retrieval}
+Before a podcast can be searched, summarised or cited, the speech must be converted into machine-readable text. Podcast audio is difficult because episodes may contain background noise, laughter, interruptions, music, accents, informal language, specialist terms and multiple speakers.
 
-Keyword search is limited because users rarely know the exact words used in an episode. A listener may search for ``carbon tax'', while the speaker said ``putting a price on emissions''. Traditional keyword search may miss this match. Semantic search addresses this by searching meaning rather than exact words.
+\subsubsection{Automatic Speech Recognition: From Waveform to Transcript}
 
-Embedding models convert text into numerical vectors. Semantically similar pieces of text are placed near each other in vector space. Sentence-BERT modifies BERT using siamese and triplet network structures so that sentence embeddings can be compared efficiently with cosine similarity. Reimers and Gurevych show that SBERT reduces the time required to find similar sentence pairs from about 65 hours with BERT/RoBERTa to about 5 seconds, while maintaining strong semantic similarity performance \citep{sbert2019}.
+Automatic Speech Recognition, or ASR, converts acoustic signals into text. A modern ASR pipeline usually begins with an audio waveform, extracts acoustic representations and uses a neural model to predict text tokens. Older systems often separated acoustic modelling, pronunciation modelling and language modelling. Modern systems increasingly use end-to-end neural architectures, including Transformer-based sequence-to-sequence models.
 
-Dense Passage Retrieval, or DPR, applies a similar idea to open-domain question answering. Karpukhin et al. show that dense representations learned through a dual-encoder framework can outperform a strong BM25 retrieval system by 9--19 percentage points in top-20 passage retrieval accuracy across several open-domain QA datasets \citep{dpr2020}.
+Whisper is an important example. The Whisper paper studies speech recognition systems trained on large amounts of weakly supervised multilingual audio from the web, and the model is widely used because it is robust across tasks and languages \cite{Radford2023Whisper}. For podcasts, this robustness matters because episodes often contain casual speech, domain-specific vocabulary and varied recording conditions.
 
-For podcasts, semantic retrieval can work as follows. First, each semantic chunk is converted into an embedding and stored in a vector database. Second, a user enters a natural-language query such as: ``Where did the guest explain why carbon taxes are politically difficult?'' Third, the query is converted into an embedding. Fourth, the vector database retrieves the nearest podcast chunks. Finally, the platform returns episode titles, timestamps, chunk summaries, and transcript excerpts.
+wav2vec 2.0 is another influential approach. It learns useful speech representations from raw audio through self-supervised learning and can then be fine-tuned for speech recognition with less labelled data \cite{Baevski2020wav2vec}. This is important for podcasting because many languages, accents and specialist domains do not have large high-quality labelled datasets. Recent commercial systems, including OpenAI's newer speech-to-text models, show that podcast transcription is becoming a platform-level capability rather than a specialised post-production service \cite{OpenAI2026STT}.
 
-This changes podcast search from episode-level discovery to argument-level discovery. A user no longer needs to know the title, guest, or exact wording. They only need to describe the idea they are looking for.
+However, a transcript is not automatically a trustworthy knowledge object. A useful podcast transcript needs timestamps, punctuation, speaker labels and confidence information. A raw block of text is better than nothing, but it still does not solve citation or accountability. The ideal transcript is time-aligned, searchable and linked back to the original audio.
 
-% VISUAL SUGGESTION: Insert a vector search diagram here.
-% Suggested graphic: a 2D vector space with dots representing podcast chunks.
-% A user query appears as a star. Nearby chunks are highlighted, showing that semantically related discussions can come from different shows.
+\subsubsection{Speaker Diarization: Who Spoke When?}
 
-\subsection{Retrieval-Augmented Generation and Grounded Podcast Q\&A}
+Speaker diarization answers the question: who spoke when? In a podcast conversation, meaning depends on speaker attribution. A claim made by the guest is different from a challenge made by the host. A joke may be understandable only because of who said it and how another speaker responded.
 
-Semantic retrieval becomes more powerful when combined with large language models. Retrieval-Augmented Generation, or RAG, combines a generator with an external knowledge store. Lewis et al. define RAG as a method that connects a pretrained sequence-to-sequence model with a non-parametric memory accessed by a neural retriever \citep{rag2020}. In podcasting, the external memory is not Wikipedia but the indexed transcript chunks of podcast episodes.
+A typical diarization system detects speech activity, segments the audio, extracts speaker embeddings and clusters segments that appear to belong to the same speaker. pyannote.audio is a widely used open-source toolkit for speaker diarization, including speaker segmentation, neural speaker embedding and clustering \cite{Bredin2023pyannote}. Diarization is technically important because it connects knowledge to accountability. A correct sentence assigned to the wrong speaker is still a serious error.
 
-A podcast RAG system can answer questions such as: ``What was the guest's position on AI copyright?'' The system first retrieves relevant chunks with timestamps, then generates an answer based only on those chunks. A responsible output should include citations back to the original audio:
+For podcast AI, the output of transcription should therefore be structured data, not just text:
 
 \begin{quote}
-The guest argued that AI-generated summaries should not replace creator compensation. They supported opt-in licensing for training and revenue sharing when AI answers substitute for listening (42:10--44:35; 51:20--53:05).
+\texttt{episode\_id, segment\_id, speaker\_id, start\_time, end\_time, transcript\_text, confidence}
 \end{quote}
 
-This design is important because it treats AI as a guide back to the source, not as an authority that replaces the source. It also helps reduce hallucination by grounding answers in retrieved evidence. RAG does not eliminate errors, but it makes verification possible.
+This structure becomes the foundation for all later stages: search, summarisation, recommendation, citation and moderation. Apple researchers have argued that simple word error rate is not enough to evaluate transcript quality, because some errors matter more than others for readability and accessibility \cite{Apple2024HEWER}. For podcast knowledge, misrecognising a filler word is minor; misrecognising a person's name, a medical term or a policy condition may change the meaning of the whole passage.
 
-% VISUAL SUGGESTION: Insert a RAG pipeline diagram here.
-% Suggested flow: user question -> query embedding -> vector database retrieves timestamped chunks -> LLM generates answer -> answer includes timestamp citations.
-% Add a warning label: "No timestamp, no trust."
+\subsection{Semantic Search: Making Podcast Knowledge Findable}
 
-\subsection{Large Language Model Summarisation and Automatic Chaptering}
+Structuring makes podcast knowledge navigable. Users no longer need to know the title, guest or exact wording, because they can search for the idea itself.
 
-Large language models can turn long transcripts into summaries, chapters, learning notes, question lists, social media clips, and newsletters. For podcasts, summarisation should be hierarchical. Instead of asking a model to summarise a three-hour transcript in one pass, the system should summarise chunks, combine chunk summaries into section summaries, and then produce an episode-level summary. This reduces the risk of missing details and preserves the structure of the conversation.
+\subsubsection{Semantic Chunking: The Length Problem after Transcription}
 
-Automatic chaptering is a practical application. Spotify states that automatic chapters are generated from episode transcripts and that creators can edit chapter titles and timestamps \citep{spotify2025}. Apple and Spotify's adoption of transcript-based navigation shows that chaptering is becoming a mainstream interface for podcasts rather than a niche feature.
+The length problem does not disappear after transcription. A three-hour podcast transcript may still be tens of thousands of words long. A user cannot reasonably read the entire transcript just to find one argument. The transcript must be divided into meaningful units.
 
-Large language models can also generate different summaries for different purposes. A casual listener may want a five-bullet preview. A student may want definitions, arguments, counterarguments, and timestamps. A journalist may want quotable moments and speaker attribution. A creator may want show notes and social media hooks.
+Semantic chunking means splitting the transcript into coherent segments: a question and answer, a topic shift, an explanation, an argument, a story or a chapter. Good chunking is harder than simply cutting the transcript every 500 words. Podcast conversations are spontaneous. Speakers interrupt each other, return to earlier points and move gradually between topics. A useful chunk should preserve enough context for meaning while remaining short enough to retrieve and cite.
 
-However, summarisation is risky. Dialogue summarisation is difficult because conversations include interruptions, disagreements, hedging, sarcasm, and implied context. TofuEval, a benchmark for topic-focused dialogue summarisation, finds that existing LLMs produce significant factual errors in dialogue summaries regardless of model size \citep{tofueval2024}. This is why summaries should include timestamp citations and why users should be able to inspect the underlying transcript.
+Recent work on podcast chapterisation addresses this problem directly. PODTILE divides long podcast transcripts into semantically coherent chapters with titles and timestamps, noting that podcast transcripts are often lengthy and less structured than written text \cite{PODTILE2024}. This is exactly the skimming problem in technical form: the user needs a map of the conversation.
 
-\subsection{Recommendation Systems: From Show-Level Recommendation to Segment-Level Discovery}
+\subsubsection{Embeddings and Vector Search: Searching Meaning Rather than Exact Words}
 
-Recommendation systems decide what users see and what creators can reach an audience. Traditional podcast recommendation uses show categories, subscriptions, listening history, popularity, and user similarity. These signals are useful but coarse. AI allows recommendation to operate at the level of segments and ideas.
+The core of semantic search is searching meaning rather than exact words. When a user searches for ``carbon tax'', the guest might say ``set a price for emissions''. Traditional keyword search may not find this segment, but embedding-based retrieval can.
 
-A platform could know not only that a show is about technology, but also that a specific episode contains a 12-minute discussion of AI copyright, a 9-minute explanation of speech recognition, and a 6-minute critique of platform monetisation. This enables more precise matching between users and content.
+An embedding is a numerical representation of meaning. A model converts a text segment into a vector in a high-dimensional space. Semantically similar segments are placed near each other. Sentence-BERT is an important early model for producing semantically meaningful sentence embeddings \cite{Reimers2019SBERT}. More recent benchmarks such as MTEB evaluate embedding models across many retrieval and classification tasks \cite{Muennighoff2023MTEB}. Spotify's engineering work on natural language search describes the same principle: semantic search matches a query and document that are meaningfully related, even without exact word overlap \cite{Spotify2022NLS}.
 
-Technically, podcast recommendation can combine several approaches. Collaborative filtering recommends shows listened to by similar users. Content-based recommendation uses transcript topics, entities, and embeddings. Graph-based recommendation connects users, shows, hosts, guests, topics, and chunks. Learning-to-rank models combine behavioural signals with semantic relevance, freshness, diversity, and creator exposure.
+At scale, vector search requires efficient indexing. Systems such as FAISS and Milvus support large-scale nearest-neighbour retrieval and vector data management, which are necessary for searching across large podcast libraries \cite{Johnson2017FAISS,Wang2021Milvus}. Figure~\ref{fig:semantic-interface} shows how this could appear to a user. The important design point is that search should return a timestamped segment, speaker label, transcript snippet and play button, not only an AI-generated answer.
 
-Evaluation should go beyond clicks. Click-through rate and completion rate matter, but they can encourage sensationalism. Better podcast recommendation should also measure long-term satisfaction, topic diversity, novelty, cold-start success, creator exposure, and whether users return to original episodes after seeing AI-generated summaries.
+\placeholderfigure
+{fig:semantic-interface}
+{Segment-level semantic search interface for podcast knowledge}
+{In the online version, show search result cards with episode title, speaker, timestamp, transcript snippet and a ``play from here'' button.}
 
-Fairness is central here. Deldjoo et al. argue that recommender systems strongly influence which information people see online and therefore affect beliefs, decisions, actions, and business outcomes \citep{deldjoo2024}. In podcasting, recommendation is not only a convenience feature. It is a visibility infrastructure.
 
-\subsection{AI Translation, Dubbing, and Voice Cloning}
+Additionally, the same transcript-and-chunk pipeline can also support segment-level moderation. Instead of judging a two-hour episode as a whole, platforms can classify timestamped segments for policy-relevant categories such as hate speech, health misinformation or copyright-sensitive audio. This addresses one of the governance challenges introduced earlier: harmful or policy-sensitive content may appear only in specific minutes of a long episode. However, because moderation requires contextual judgement, automated flags should trigger human review rather than automatic punishment.
 
-Language is another barrier in podcasting. A valuable interview recorded in English may be inaccessible to Spanish, Chinese, or Arabic-speaking audiences. Traditional human translation and dubbing are expensive and slow. AI dubbing combines ASR, machine translation, text-to-speech, and sometimes voice cloning.
 
-A typical pipeline is: transcribe the source audio, translate the transcript, generate target-language speech, align the new audio with the original timing, and optionally preserve the speaker's voice style. VALL-E demonstrates zero-shot text-to-speech by generating speech from phoneme and acoustic code prompts, enabling speech synthesis from short speaker prompts \citep{valle2023}. Meta's Voicebox can synthesise speech across six languages, remove transient noise, edit content, and transfer audio style across languages \citep{voicebox2023}. Commercial tools such as ElevenLabs Dubbing Studio advertise localisation across 29 languages while preserving speaker emotion, timing, tone, and voice characteristics \citep{elevenlabs2026}.
+\subsection{Grounded Summarisation: Making Podcast Knowledge Usable}
 
-For podcasting, this could expand global reach dramatically. Educational shows could become multilingual learning resources. Independent creators could reach audiences beyond their native language. News and analysis podcasts could circulate internationally.
+Search helps users find relevant segments. Summarisation helps users understand what those segments mean. But podcast summarisation must be grounded, because a fluent summary can easily distort a complex conversation.
 
-Yet voice cloning is ethically sensitive because a voice is not merely content. It is also identity. The privacy and consent issues are discussed in Section 4.
+\subsubsection{Retrieval-Augmented Generation}
 
-% VISUAL SUGGESTION: Insert an AI dubbing pipeline here.
-% Suggested flow: original audio -> ASR transcript -> translation -> target-language script -> TTS/voice cloning -> aligned multilingual episode.
-% Add risk labels: consent, mistranslation, synthetic voice disclosure, creator control.
+Retrieval-Augmented Generation, or RAG, combines a generative language model with retrieved external evidence. In the original RAG formulation, a model retrieves relevant passages from a dense vector index and then generates an answer conditioned on those passages \cite{Lewis2020RAG}. For podcasts, the external evidence is the timestamped transcript of the original audio.
 
-\subsection{Audio Enhancement and Source Separation}
+A podcast RAG system works in four steps. First, the user's question is embedded. Second, the system retrieves relevant transcript chunks. Third, the language model generates an answer using those chunks. Fourth, the answer cites the episode, speaker and timestamp that support it. This structure is important because large language models can hallucinate: they may generate fluent text that is unsupported or inaccurate \cite{Huang2025Hallucination}. RAG does not eliminate hallucination; it makes hallucination easier to detect because important claims can be checked against retrieved transcript evidence.
 
-AI also improves podcast production. Many independent creators record in bedrooms, offices, cafes, or remote calls. Background noise, echo, uneven loudness, and overlapping speech reduce listening quality and can also reduce ASR accuracy.
+\subsubsection{Why Podcast RAG Should Cite Audio Evidence}
 
-Audio enhancement models operate on waveforms or spectrograms to remove noise, reduce reverberation, isolate speech, and normalise loudness. Adobe Podcast's Enhance Speech tool is designed to make voice recordings sound as if they were recorded in a professional studio \citep{adobe2026}. Source separation tools such as Spleeter and Demucs separate mixed audio into components. Spleeter can separate a mix into stems and was reported to process four-stem separation up to 100 times faster than real time on a GPU \citep{spleeter2020}. Demucs is based on a U-Net convolutional architecture and later versions combine waveform and spectrogram approaches with Transformer components \citep{demucs2022}.
+A responsible podcast Q\&A system should not simply answer the user; it should show which transcript segment and timestamp support the answer. The principle should be simple: no timestamp, no trust.
 
-For podcasting, enhancement has three benefits. It lowers production barriers for independent creators. It improves listener experience. It also improves downstream AI performance because cleaner audio leads to better transcription, diarization, and translation.
+The following illustrative example shows why timestamped evidence matters. Suppose a user asks a podcast AI system about a policy discussion:
 
-\begin{table}[ht]
+\begin{quote}
+\textbf{User query:} What did the guest say about carbon taxes?\\[0.3em]
+\textbf{Retrieved evidence:} Episode transcript, Guest A, 01:14:22--01:17:05. The retrieved segment discusses pricing emissions, redistributing revenue to households and protecting low-income groups.\\[0.3em]
+\textbf{Weak AI answer:} The guest supports carbon taxes.\\[0.3em]
+\textbf{Better AI answer:} The guest supports carbon taxes conditionally. They argue that carbon taxes can work if revenue is redistributed to households and if low-income groups are protected.\\[0.3em]
+\textbf{User action:} The interface should provide a ``play from 01:14:22'' button and a transcript link so that the user can verify the context.
+\end{quote}
+
+The weak answer is not completely false, but it removes the condition that makes the argument meaningful. The better answer preserves nuance, cites the relevant moment and gives the user a path back to the original audio. Recent work such as VoxRAG also explores transcription-free audio retrieval, where systems retrieve relevant audio segments directly from spoken queries \cite{VoxRAG2025}. This is promising, but text transcripts remain important for accountability because users and creators need visible evidence.
+
+
+\subsubsection{LLM Summarisation and Recommendation}
+
+LLM summarisation can turn long transcripts into previews, chapter lists and learning notes. For users, this can reduce the cost of deciding whether to listen. For creators, it can reduce the burden of writing show notes. For platforms, it can improve recommendation by using semantic content rather than popularity alone.
+
+With the help of AI, podcast recommendation can move from popularity-based recommendation to semantic recommendation. Instead of asking only ``which show is popular?'', the platform can ask ``which segment explains the idea the user wants?'' This could benefit small or niche creators because their content may be discovered through meaning rather than existing audience size.
+
+However, summarisation should be designed to support listening, not replace it. A podcast is not only a container of facts. It is a conversation. Tone, hesitation, disagreement and context matter. Grounded summarisation should therefore be used as a guide into the episode, not as a substitute for the episode.
+
+\section{Ethical Implications and Responsible Design: Who Controls AI-Mediated Podcast Knowledge?}
+
+Once AI begins to summarise, recommend and answer questions about podcasts, it is no longer a neutral productivity tool; it becomes a knowledge intermediary that shapes trust, visibility and value.
+
+\subsection{Accuracy and Trust: Can AI Accurately Represent What Was Said?}
+
+The first ethical issue is accuracy. Podcast AI can fail at several levels: transcription, speaker attribution, retrieval and summarisation. Each failure changes how users understand the original conversation.
+
+\subsubsection{Transcription Errors Affect Access and Meaning}
+
+Transcription errors affect access and meaning. Accents, dialects, background noise and overlapping speech can all reduce ASR accuracy. These errors are not evenly distributed. A well-known study of commercial ASR systems found racial disparities in word error rates, with higher average errors for Black speakers than for white speakers in the tested U.S. speech samples \cite{Koenecke2020ASRBias}. This matters for podcasting because poor transcription can make some voices less searchable, less quotable and less visible.
+
+\subsubsection{The Risk of Over-Summary}
+
+The AI summary might take things out of context. If a complex discussion is compressed into three sentences, the original tone, reserved opinions and rebuttal relationships may disappear. This is especially dangerous because users may trust a summary without checking the original audio.
+
+Consider the example from the introduction:
+
+\begin{quote}
+\textbf{Original:} Carbon taxes can work if revenue is redistributed to households.\\
+\textbf{Error summary:} The guest supports carbon taxes.
+\end{quote}
+
+The summary is not completely false, but it removes the condition that makes the argument meaningful. In political, scientific or medical discussions, this difference can be very important. A responsible system should therefore mark the difference between direct quotation, close paraphrase and generated interpretation.
+
+\subsubsection{Speaker Attribution Errors Affect Accountability}
+
+Speaker attribution errors affect accountability. A correct sentence assigned to the wrong speaker is still a serious error. In podcasts, the speaker relationship often carries the meaning. The host may challenge a claim, the guest may qualify it, and another guest may disagree. If the system assigns these turns incorrectly, the transcript misrepresents the conversation.
+
+\subsubsection{Responsible Design: Evidence-Based Summaries}
+
+Responsible podcast AI should be built around evidence-based summaries. Every important AI-generated claim should link back to the original timestamp. No timestamp, no trust.
+
+This design can include three practical controls:
+
+\begin{itemize}
+    \item \textbf{Timestamp citation and transcript evidence:} important claims should cite the supporting transcript segment and provide a play button for the original audio.
+    \item \textbf{Uncertainty labels:} if transcript confidence is low or retrieval evidence is weak, the system should say so.
+    \item \textbf{Creator control:} transcript generation should be opt-out or editable, and AI summaries should be reviewable where they represent the creator's work.
+\end{itemize}
+
+Accuracy is therefore not only a model-performance issue. It is an interface and governance issue. Users need evidence, and creators need the ability to correct the representation of their own conversations.
+
+\subsection{Fairness and Visibility: Who Decides Which Is Heard?}
+
+The second ethical issue is fairness. AI discovery may help users find niche creators, but it may also reinforce inequality if the system favours content that is easier to transcribe, classify and summarise.
+
+\subsubsection{AI Discovery May Also Reinforce Inequality}
+
+Popular shows, standard accents and machine-friendly speech may be favoured. If recommendation systems reward content that is easy to transcribe, summarise and classify, they may favour creators who speak in structured, standardised and machine-readable ways. Creators with regional accents, multilingual speech, noisy recording environments or informal conversational styles may become less visible.
+
+AI discovery therefore has two sides. It can reduce the cold-start problem by understanding content semantically. But it can also create a new form of algorithmic inequality. Fair podcast AI should not only optimise what users like; it should also consider whose voices become discoverable.
+
+\subsubsection{Responsible Design: Explainable Recommendation and Appeal}
+
+Responsible design should include explainable recommendation and appeal mechanisms. Creators should be able to see how their content is represented by the system: detected topics, indexed segments, transcript confidence, moderation flags and recommendation exposure. Without such information, creators are judged by a black-box system they cannot inspect.
+
+Platforms should also provide appeal mechanisms. If a creator believes a transcript, topic label, moderation decision or ranking signal is wrong, they should have a way to challenge it. Fairness is not achieved by claiming that the algorithm is neutral. It is achieved by making the system inspectable, correctable and accountable.
+
+\subsection{Ownership and Value Extraction: Does AI Unlock Podcasts or Replace Listening?}
+
+The third ethical issue is ownership and value extraction. AI makes podcast knowledge more accessible, but if users no longer listen to the original programmes, do creators lose their value instead?
+
+\subsubsection{The Zero-Click Consumption Problem}
+Zero-click experiences are already discussed in web search, where users receive answers directly from the search interface rather than visiting the original publisher. Bain has argued that AI-driven zero-click search changes marketing and discovery because users may no longer click through to the original source \cite{Bain2025ZeroClick}. By analogy with zero-click search, podcast AI could create a similar zero-click listening problem: Users may get the knowledge without listening to the source. For example, a RAG-powered ``chat with podcasts'' interface could give users the key takeaways without requiring them to play the episode. This is convenient for users, but it creates a zero-click consumption problem.
+
+If the platform turns the podcast library into a RAG-powered answer engine, users may directly obtain key points through Q\&A and AI summaries, thereby skipping the original programme, reducing listens, watch-time and ad revenue. A good AI summary should help users decide where to listen; a bad AI summary becomes a substitute that extracts the value of listening while bypassing the creator.
+
+\subsubsection{Creator Value and Platform Capture}
+
+The creator produces the knowledge, but the AI interface captures the attention. The creator loses the listen, the completion rate and the ad revenue. AI becomes a value extractor.
+
+This raises a basic question: who should profit when AI turns a creator's long-form conversation into instant answers? If a platform uses a podcast episode to answer a user's question, the platform benefits from the creator's labour. If the AI interface captures the user's attention without returning value to the people who produced the episode, then attribution alone is not enough.
+
+The issue is connected to wider debates about publisher control over AI summaries. In 2026, reporting on the UK Competition and Markets Authority described proposed measures requiring more meaningful publisher choice over whether content is used in AI-generated summaries in Google Search \cite{AP2026CMA}. Podcasts face a parallel question. Creators need meaningful control over whether their work is indexed, summarised, used for Q\&A or used for model training.
+
+\subsubsection{Responsible Design: Granular Consent and Revenue Sharing}
+
+
+Platforms should offer granular consent options to creators. Permission should not be treated as a single yes-or-no decision, because different AI uses create different levels of risk and value extraction. At minimum, creators should be able to distinguish between four forms of AI use:
+
+\begin{enumerate}
+    \item \textbf{Training:} using podcast audio or transcripts to train, fine-tune or improve AI models.
+    \item \textbf{Indexing:} storing transcripts, metadata or embeddings so that episodes and segments can appear in search results.
+    \item \textbf{Summarisation:} generating show notes, chapter titles, previews or learning notes from the transcript.
+    \item \textbf{Question-answering:} allowing users to ask an AI system questions that are answered from the episode without necessarily playing the original audio.
+\end{enumerate}
+
+The permissions should be separated rather than bundled together.For example, a creator may allow accessibility transcripts and search indexing, but reject model training. Another creator may allow short chapter summaries, but reject full conversational Q\&A features that could substitute for listening. The platform interface should make these choices visible, reversible and understandable. It should also specify whether creators receive attribution, playback traffic or revenue when AI-generated answers are based on their work.
+
+
+Copyright law already recognises that creators have rights over the expression of their original works, including copying, distribution, adaptation and public communication \cite{WIPO2026Copyright,GovUK2026Copyright}. However, copyright does not straightforwardly solve every AI podcast question, because an AI answer may extract facts, themes or arguments rather than reproduce a long passage verbatim. This is why podcast AI governance should not rely on copyright alone. It also needs consent, attribution, provenance and fair value-sharing mechanisms.
+
+If a platform uses AI answers to gain user attention, revenue sharing should also be considered. Technical provenance standards such as C2PA also show how digital content can be linked to verifiable provenance information \cite{C2PA2026}. Podcast AI needs a similar norm for knowledge provenance: which episode supported this answer, whose voice was used, and what value flowed back? If AI interfaces monetise podcast knowledge, attribution alone is not enough; creators need control over use and a fair share of the value created from their work.
+
+\subsection{Summary of the Ethics-to-Responsible Design Mapping}
+
+Three risks require three responses: accuracy requires evidence; fairness requires explainability; ownership requires consent and compensation. Table~\ref{tab:ethics-design} summarises this mapping. Figure~\ref{fig:governance-loop} then shows the larger design principle: responsible podcast AI should guide users back to the original conversation.
+
+\begin{table}[htbp]
 \centering
-\small
-\caption{AI technologies in the podcast knowledge pipeline}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.6cm}
->{\raggedright\arraybackslash}X
->{\raggedright\arraybackslash}X
->{\raggedright\arraybackslash}p{2.3cm}
->{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{0.96\linewidth}{>{\raggedright\arraybackslash}p{0.25\linewidth}
+                                >{\raggedright\arraybackslash}X
+                                >{\raggedright\arraybackslash}X}
 \toprule
-\textbf{Technology} & \textbf{Podcast problem addressed} & \textbf{Core method} & \textbf{Useful metrics} & \textbf{Main risk} \\
+\textbf{Ethical risk} & \textbf{Main danger} & \textbf{Governance response} \\
 \midrule
-ASR & Audio cannot be searched or accessed by deaf users & Transformer ASR, weak supervision, self-supervised speech learning & WER, confidence score, timestamp accuracy & Accent and dialect bias \\
-Speaker diarization & Transcript does not show who spoke & Voice activity detection, speaker embeddings, clustering & DER, speaker confusion rate & False attribution \\
-Semantic chunking & Long transcripts remain hard to navigate & Topic segmentation, speaker turns, embeddings, LLM analysis & Chunk coherence, retrieval precision & Loss of context \\
-Semantic search & Keyword search misses meaning & Sentence embeddings, dense retrieval, vector database & Recall@k, MRR, NDCG & Retrieval bias or irrelevant matches \\
-RAG and summarisation & Long episodes are hard to skim & Retrieval-augmented generation, hierarchical summarisation & Factual consistency, citation coverage & Hallucination or over-compression \\
-Recommendation & New creators are hard to discover & Hybrid recommender, graph models, learning-to-rank & Relevance, diversity, exposure fairness & Platform opacity and popularity bias \\
-AI dubbing & Content is locked in one language & ASR, machine translation, TTS, voice cloning & Translation quality, MOS, speaker similarity & Voice rights and consent \\
-Audio enhancement & Production quality is uneven & Noise suppression, dereverberation, source separation & SNR, PESQ, ASR improvement & Over-processing or distortion \\
+Accuracy and trust & AI summaries distort nuance or assign claims to the wrong speaker. & Timestamp citation, transcript evidence, uncertainty labels and editable transcripts. \\
+Fairness and visibility & Algorithms decide who is heard, often favouring already popular or machine-friendly speech. & Explainable recommendation, creator dashboards, exposure metrics and appeal mechanisms. \\
+Ownership and value extraction & AI answers replace listening while platforms capture value from creator knowledge. & Granular consent, separate permissions, attribution, playback links and revenue sharing. \\
 \bottomrule
 \end{tabularx}
+\caption{Mapping ethical risks to responsible podcast AI design.}
+\label{tab:ethics-design}
 \end{table}
 
-\section{Ethical Implications: Who Controls AI-Mediated Podcast Knowledge?}
+\placeholderfigure
+{fig:governance-loop}
+{Responsible podcast AI as a bridge back to original listening}
+{In the online version, draw a loop from user question to AI answer, timestamped evidence, original audio playback and creator attribution or revenue.}
 
-AI makes podcast knowledge more accessible, but it also changes the power structure of podcasting. In the past, users had to listen to original episodes. Now they may read AI summaries or ask a chatbot for key points. In the past, platforms recommended episodes. Now they may recommend fragments, generate answers, translate voices, and produce synthetic versions of creators' work.
-
-The central ethical question is therefore: \textit{who controls how podcast knowledge is represented, distributed, and monetised?}
-
-\subsection{Accuracy and Trust: Summaries Can Misrepresent Nuance}
-
-Podcast summaries do not only risk inventing facts. They also risk flattening nuance. A guest may say: ``Carbon taxes can be economically efficient, but without redistribution they may harm low-income households.'' A careless AI summary may reduce this to: ``The guest supports carbon taxes.'' The summary is not entirely false, but it removes the condition that made the argument responsible.
-
-This matters because podcasts often contain disagreement, uncertainty, humour, sarcasm, and evolving arguments. Dialogue summarisation is harder than summarising a polished article. TofuEval shows that LLM-generated dialogue summaries can contain significant factual errors \citep{tofueval2024}. Therefore, podcast AI should not present summaries as source-independent truth.
-
-The best solution is timestamp citation. Every important claim in an AI summary should be linked to the exact audio segment and transcript evidence. A reliable system should allow users to click from a generated sentence back to the original moment. This makes the summary a navigational layer rather than a replacement for the episode.
-
-NIST's AI Risk Management Framework emphasises trustworthy AI characteristics including validity, reliability, safety, accountability, transparency, explainability, privacy, and fairness \citep{nist2023}. For podcast AI, transparency means showing not only what the model says, but also which audio evidence supports it.
-
-\subsection{Fairness and Visibility: Recommendation Systems Decide Who Is Heard}
-
-AI-powered semantic recommendation could help small creators. A new podcast with few subscribers could still be recommended if a specific segment matches a user's interest. This would be a major improvement over purely popularity-based discovery.
-
-However, recommendation systems can also reinforce inequality. If models prefer already popular shows, celebrity guests, standard accents, dominant languages, or highly engaging controversy, then AI will make the rich-get-richer dynamic stronger. Small creators may become even more dependent on opaque platform systems.
-
-The Knight First Amendment Institute explains that when people speak online, who hears them is determined largely by algorithms; recommender systems are the engine of major social platforms \citep{knight2023}. Podcast platforms increasingly operate in the same way. If AI decides which podcast knowledge is surfaced, it shapes public attention.
-
-Podcast recommendation fairness should include at least three dimensions. First, exposure fairness: new and independent creators should have a realistic chance of being shown. Second, representation fairness: minority languages, regional accents, and non-mainstream topics should not be systematically under-ranked. Third, explainability: creators should be able to understand why their content was recommended, restricted, or ignored.
-
-A responsible platform should provide creator-facing explanations. Creators should be able to see which topics were detected, which segments were recommended, whether transcript errors affected classification, and whether moderation systems limited distribution.
-
-% VISUAL SUGGESTION: Insert a fairness matrix here.
-% Suggested axes: user relevance on the x-axis and creator exposure fairness on the y-axis.
-% Four quadrants: ideal recommendation, popularity lock-in, irrelevant diversity, and worst-case opaque ranking.
-
-\subsection{Ownership and Value Extraction: AI May Replace the Original Episode}
-
-The most important ethical issue is ownership. AI can unlock podcast knowledge, but it can also extract value from creators.
-
-Imagine that a large platform builds a RAG-powered ``chat with podcasts'' interface over its entire podcast library. A user asks: ``Summarise this guest's position on AI copyright.'' The system returns three paragraphs, key quotes, and timestamps. The user gains the knowledge but may not play the episode. The creator loses listens, watch-time equivalents, advertising impressions, and possibly subscription conversions.
-
-This creates a platform economy problem. The creator produced the knowledge. The platform indexed it. The AI interface captured the user's attention. Who should receive the value?
-
-RAG can be beneficial when it directs users back to original sources. But if AI answers become substitutes for listening, they may reduce the economic value of podcast creation. This is not only a copyright question; it is also a question of incentive. If creators are used mainly as raw material for AI summaries, the long-term supply of high-quality podcasts may decline.
-
-Policy debates around AI and copyright are already moving in this direction. The EU General-Purpose AI Code of Practice focuses on transparency, copyright, safety, and security obligations for general-purpose AI models \citep{eu2025gpai}. The UK government's 2026 report on copyright and AI discusses the use of copyright works in AI development, transparency, licensing, and enforcement \citep{uk2026copyright}. The U.S. Copyright Office has also published reports on digital replicas, AI output copyrightability, and generative AI training \citep{usco2025ai}.
-
-Podcast platforms should therefore provide creator controls. Creators should be able to opt in or out separately for transcript generation, public search, AI summaries, AI translation, RAG-based Q\&A, model training, and voice cloning. These are different uses and should not be bundled into one vague consent.
-
-Revenue sharing should also be considered when AI answers substitute for listening. Compensation could be based on cited segments, AI answer impressions, click-throughs to original audio, subscription conversions, or advertising revenue. The guiding principle should be clear: AI-enhanced access should not turn creators into unpaid data suppliers.
-
-\subsection{Privacy and Voice Rights: A Voice Is Both Content and Identity}
-
-Voice cloning adds a further ethical layer. A podcast voice is not just speech content; it can be a biometric and personal identifier. The UK Information Commissioner's Office explains that biometric data is personal information when it allows unique identification, and special category biometric data when used for that purpose \citep{ico2025}. Voiceprints and synthetic voice models therefore require stronger consent and governance than ordinary transcripts.
-
-Voice cloning can be useful. It can help creators produce multilingual versions of their shows and support users who prefer audio. It can also help people who have lost the ability to speak. But it can be abused. The U.S. Federal Trade Commission warns that voice cloning can enable fraud, extortion scams, appropriation of voice artists' voices, and public deception \citep{ftc2023voice}.
-
-Podcast platforms should distinguish between transcribing speech content and copying vocal identity. Transcripts support accessibility and search. Voice cloning creates a reusable model of a person's voice. The second requires explicit consent, clear labelling, revocation rights, and audit trails.
-
-\subsection{Labour Impact: Automation Lowers Costs but Reorganises Work}
-
-AI transcription, editing, dubbing, and clip generation reduce production time. This helps independent creators who cannot afford professional studios, editors, translators, or marketing teams. It may make podcasting more open and diverse.
-
-However, automation also affects workers who support the podcast economy: transcriptionists, audio engineers, editors, translators, voice actors, caption writers, and producers. Some tasks will be automated or commoditised. At the same time, new roles will emerge: AI audio producer, transcript reviewer, prompt designer, rights clearance specialist, synthetic voice supervisor, and AI content operations manager.
-
-The ethical issue is not simply whether jobs disappear. It is whether the industry creates a fair transition. Platforms and media companies should invest in training, quality standards, disclosure, and human-in-the-loop review. Human craft should remain visible and rewarded, especially in areas requiring editorial judgement, cultural nuance, and ethical responsibility.
-
-\section{Governance Recommendations}
-
-Responsible podcast AI should be built around six practical principles.
-
-\subsection{Timestamp Citation Should Be Mandatory for AI Summaries}
-
-AI summaries, chapters, highlights, and answers should include timestamp citations. Users should be able to click from a claim to the original audio and transcript. A podcast AI system should follow the rule: no important claim without evidence.
-
-\subsection{Transcripts Should Be Editable, Contestable, and Uncertainty-Aware}
-
-ASR errors affect accessibility, search, recommendation, and creator reputation. Platforms should allow creators to upload or edit transcripts in standard formats such as VTT or SRT. Users should be able to report errors. Low-confidence passages, overlapping speech, and uncertain speaker labels should be visibly marked.
-
-\subsection{Recommendation Systems Should Be Explainable to Creators}
-
-Creators should know what topics, guests, and segments the platform detected. They should also know whether distribution was limited by moderation, transcript errors, or classification issues. Platforms should provide appeal mechanisms when AI-generated metadata harms visibility.
-
-\subsection{Creator Consent Should Be Granular}
-
-Platforms should not treat public podcast availability as consent for all AI uses. Consent should be separated across transcript generation, search indexing, summarisation, translation, dubbing, RAG question answering, model training, and voice cloning. Each use has different risks.
-
-\subsection{Revenue Sharing Should Apply When AI Answers Substitute for Listening}
-
-If AI-generated answers capture value that would otherwise flow to creators through listens, ads, subscriptions, or memberships, platforms should share revenue. Attribution alone is insufficient when AI interfaces become the main user experience.
-
-\subsection{Synthetic Audio and AI Translation Should Be Clearly Labelled}
-
-AI-generated voices, translated versions, and dubbed podcasts should be labelled. EU AI Act transparency obligations for synthetic and manipulated content point toward this broader standard \citep{euarticle50}. Users should know when they are hearing a human recording, a translated version, or a synthetic voice.
-
-\begin{table}[ht]
-\centering
-\small
-\caption{Responsible podcast AI: risks and governance responses}
-\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{3.2cm}
->{\raggedright\arraybackslash}X
->{\raggedright\arraybackslash}X}
-\toprule
-\textbf{Risk} & \textbf{Why it matters} & \textbf{Governance response} \\
-\midrule
-Inaccurate summaries & Nuanced arguments may be flattened or misrepresented & Timestamp citations, transcript evidence, human review for sensitive topics \\
-ASR bias & Some accents, dialects, or languages may become less searchable & Bias audits, model evaluation across groups, editable transcripts \\
-Opaque recommendation & Platforms decide which creators are visible & Creator-facing explanations, exposure fairness metrics, appeal mechanisms \\
-Value extraction & AI answers may reduce listens and ad revenue & Opt-in licensing, attribution, click-through design, revenue sharing \\
-Voice cloning misuse & A creator's voice can be copied without consent & Explicit consent, labelling, revocation rights, synthetic media watermarking \\
-Labour displacement & AI may reduce demand for transcription, editing, and dubbing work & Upskilling, human-in-the-loop workflows, quality standards \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-% VISUAL SUGGESTION: Insert a circular governance diagram here.
-% Centre: "Responsible Podcast AI".
-% Around it: timestamp citation, creator control, fair recommendation, accessibility by design, voice consent, revenue sharing.
+Responsible podcast AI should be designed as a bridge back to original listening, not as a platform-controlled substitute that extracts knowledge, attention and revenue from creators.
 
 \section{Conclusion: AI Should Unlock Podcast Knowledge, Not Extract It}
 
-Podcasting is valuable because it supports long conversations, trust, tone, and context. It is not always the fastest way to consume information, but it is one of the best formats for complex explanation and human dialogue. The problem is that this knowledge has historically been trapped in long audio files.
+Podcasting matters because it preserves forms of knowledge that short-form media often lose: long explanation, human voice, disagreement, uncertainty and trust. But these same qualities make podcasts hard to navigate. The audio black box limits search, access and discovery.
 
-AI can change this. ASR turns speech into text. Diarization identifies speakers. Semantic chunking converts long transcripts into navigable units. Embeddings and vector databases allow users to search by meaning. RAG and LLM summarisation create grounded answers and learning notes. Recommendation systems can help relevant segments reach the right audiences. Translation, dubbing, and audio enhancement can make podcasting more global, accessible, and professional.
+\subsection{Summary of the AI Transformation}
 
-Yet AI also changes who controls podcast knowledge. ASR decides whose voice is accurately recorded. Summarisation decides which nuances survive compression. Recommendation decides who is heard. RAG interfaces decide whether users return to the original episode. Voice cloning decides whether a creator's vocal identity can be reused. These are not merely technical choices; they are governance choices.
+Podcasts are valuable but hard to navigate. The audio black box limits search, skimming, citation, discovery and governance. AI creates a knowledge pipeline: decode, structure and mediate.
 
-The responsible path is not to use AI to replace listening. It is to use AI to make listening more searchable, inclusive, verifiable, and economically fair. Podcast AI should turn summaries into entry points, not substitutes. It should help small creators become discoverable, not lock them out through opaque ranking. It should translate and enhance content with consent, not harvest voices as biometric raw material. It should share value when AI interfaces monetise creator knowledge.
+The first step is decoding. ASR and diarization turn speech into attributed, timestamped text. The second step is structuring. Semantic chunking, embeddings and vector search turn long transcripts into searchable knowledge units. The third step is mediation. RAG, summaries and recommendations help users ask questions, preview content and jump to relevant moments.
 
-The future of podcasting should therefore follow one principle: \textbf{AI should unlock podcast knowledge, not extract it.}
+Together, these technologies can make podcasts more useful as knowledge sources. They can help students find arguments, help deaf and hard-of-hearing users access audio, help small creators become discoverable and help platforms recommend relevant segments rather than only popular episodes.
+
+\subsection{The Crucial Choice: Parasitic Extraction vs. Symbiotic Ecosystem}
+
+In a parasitic system, platforms turn creators' voices into unpaid infrastructure for automated answers. Users receive convenient summaries, but creators lose attention, revenue and control. The podcast becomes raw material for platform-controlled knowledge extraction.
+
+In a symbiotic ecosystem, AI helps people find, understand and return to human conversations. Transcripts are editable. Summaries cite timestamps. Recommendations are explainable. Creators can control AI uses of their work. Revenue flows back when AI interfaces monetise creator knowledge.
+
+
+AI should unlock podcast knowledge, not extract it. The future of podcast AI should be a symbiotic ecosystem not a parasitic system. The argument of this blog is therefore simple: AI should make podcast listening more searchable, inclusive and rewarding, but it should not turn creators' work into free raw material for platform-controlled knowledge extraction.
 
 \newpage
 
-\begin{thebibliography}{34}
+\begin{thebibliography}{99}
 
-\bibitem{edison2026}
-Edison Research at SSRS.
-\textit{The Infinite Dial 2026}.
-2026.
-\url{https://www.edisonresearch.com/the-infinite-dial-2026/}
+\bibitem{Edison2025}
+Edison Research. (2025).
+\textit{The Podcast Consumer 2025}.
+Available at: \url{https://www.edisonresearch.com/the-podcast-consumer-2025/}
+[Accessed 1 May 2026].
 
-\bibitem{grandview2025}
-Grand View Research.
-\textit{Podcasting Market Size and Share: Industry Report, 2030}.
-2025.
-\url{https://www.grandviewresearch.com/industry-analysis/podcast-market}
+\bibitem{DataReportal2025}
+DataReportal. (2025).
+\textit{Digital 2025: Podcasts gaining popularity}.
+Available at: \url{https://datareportal.com/reports/digital-2025-sub-section-podcasts-gain-popularity}
+[Accessed 1 May 2026].
 
-\bibitem{podcastinsights2026index}
-Podcast Industry Insights.
-\textit{Podcast Index Statistics}.
-2026.
-\url{https://podcastindustryinsights.com/podcast-index-statistics}
+\bibitem{YouTube2025}
+YouTube. (2025).
+\textit{Celebrating 1 billion monthly podcast users on YouTube}.
+Available at: \url{https://blog.youtube/news-and-events/1-billion-monthly-podcast-users/}
+[Accessed 1 May 2026].
 
-\bibitem{podcastinsights2026features}
-Podcast Industry Insights.
-\textit{Podcasting 2.0 Features}.
-2026.
-\url{https://podcastindustryinsights.com/podcasting-2-0-statistics}
+\bibitem{IAB2026}
+Interactive Advertising Bureau and PwC. (2026).
+\textit{Internet Advertising Revenue Report: Full Year 2025}.
+Available at: \url{https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2025/}
+[Accessed 1 May 2026].
 
-\bibitem{who2026}
-World Health Organization.
-\textit{Deafness and Hearing Loss}.
-2026.
-\url{https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss}
+\bibitem{WHO2026}
+World Health Organization. (2026).
+\textit{Deafness and hearing loss}.
+Available at: \url{https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss}
+[Accessed 1 May 2026].
 
-\bibitem{w3c_transcripts}
-W3C Web Accessibility Initiative.
-\textit{Transcripts}.
-\url{https://www.w3.org/WAI/media/av/transcripts/}
+\bibitem{Aziz2021Underserved}
+Aziz, M., Wang, A., Pappu, A., Bouchard, H., Zhao, Y., Carterette, B. and Lalmas, M. (2021).
+Leveraging semantic information to facilitate the discovery of underserved podcasts.
+\textit{Proceedings of the 30th ACM International Conference on Information \& Knowledge Management}.
+Available at: \url{https://research.atspotify.com/publications/leveraging-semantic-information-to-facilitate-the-discovery-of-underserved-podcasts}
+[Accessed 1 May 2026].
 
-\bibitem{apple2024transcripts}
-Apple.
-\textit{Apple Introduces Transcripts for Apple Podcasts}.
-2024.
-\url{https://www.apple.com/uk/newsroom/2024/03/apple-introduces-transcripts-for-apple-podcasts/}
+\bibitem{Apple2024Transcripts}
+Apple. (2024).
+\textit{Transcripts on Apple Podcasts}.
+Available at: \url{https://podcasters.apple.com/support/5316-transcripts-on-apple-podcasts}
+[Accessed 1 May 2026].
 
-\bibitem{apple2025transcribed}
-Apple Podcasts for Creators.
-\textit{Apple Podcasts Transcribes More Than 100 Million Episodes}.
-2025.
-\url{https://podcasters.apple.com/5502-news-transcribe-100-million-episodes}
+\bibitem{Spotify2025Transcripts}
+Spotify. (2025).
+\textit{Managing episode transcripts on Spotify}.
+Available at: \url{https://support.spotify.com/us/creators/article/managing-episode-transcripts-on-spotify/}
+[Accessed 1 May 2026].
 
-\bibitem{spotify2025}
-Spotify for Creators.
-\textit{Amplifying Your Show on Spotify with Automatic Transcripts, Chapters, and More}.
-2025.
-\url{https://creators.spotify.com/resources/grow/automated-transcripts-chapters}
+\bibitem{Spotify2025Chapters}
+Spotify. (2025).
+\textit{Episode chapters}.
+Available at: \url{https://support.spotify.com/us/creators/article/episode-chapters/}
+[Accessed 1 May 2026].
 
-\bibitem{whisper2022}
-Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever.
-\textit{Robust Speech Recognition via Large-Scale Weak Supervision}.
-OpenAI, 2022.
-\url{https://arxiv.org/abs/2212.04356}
+\bibitem{Spotify2026Prompted}
+Spotify. (2026).
+\textit{Prompted Playlist levels up to include podcasts}.
+Available at: \url{https://newsroom.spotify.com/2026-04-07/prompted-playlist-for-podcasts-launch/}
+[Accessed 1 May 2026].
 
-\bibitem{wav2vec2020}
-Alexei Baevski, Henry Zhou, Abdelrahman Mohamed, and Michael Auli.
-\textit{wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations}.
-2020.
-\url{https://arxiv.org/abs/2006.11477}
+\bibitem{Radford2023Whisper}
+Radford, A., Kim, J. W., Xu, T., Brockman, G., McLeavey, C. and Sutskever, I. (2023).
+Robust speech recognition via large-scale weak supervision.
+\textit{Proceedings of the 40th International Conference on Machine Learning}.
+Available at: \url{https://proceedings.mlr.press/v202/radford23a.html}
+[Accessed 1 May 2026].
 
-\bibitem{koenecke2020}
-Allison Koenecke et al.
-\textit{Racial Disparities in Automated Speech Recognition}.
-Proceedings of the National Academy of Sciences, 2020.
-\url{https://www.pnas.org/doi/10.1073/pnas.1915768117}
+\bibitem{Baevski2020wav2vec}
+Baevski, A., Zhou, H., Mohamed, A. and Auli, M. (2020).
+wav2vec 2.0: A framework for self-supervised learning of speech representations.
+\textit{Advances in Neural Information Processing Systems}.
+Available at: \url{https://arxiv.org/abs/2006.11477}
+[Accessed 1 May 2026].
 
-\bibitem{pyannote2023}
-Herv\'e Bredin.
-\textit{pyannote.audio 2.1 Speaker Diarization Pipeline: Principle, Benchmark, and Recipe}.
-Interspeech, 2023.
-\url{https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html}
+\bibitem{OpenAI2026STT}
+OpenAI. (2026).
+\textit{Speech to text: OpenAI API documentation}.
+Available at: \url{https://developers.openai.com/api/docs/guides/speech-to-text}
+[Accessed 1 May 2026].
 
-\bibitem{sbert2019}
-Nils Reimers and Iryna Gurevych.
-\textit{Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks}.
-2019.
-\url{https://arxiv.org/abs/1908.10084}
+\bibitem{Bredin2023pyannote}
+Bredin, H. (2023).
+pyannote.audio 2.1 speaker diarization pipeline: principle, benchmark, and recipe.
+\textit{Proceedings of Interspeech 2023}.
+Available at: \url{https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html}
+[Accessed 1 May 2026].
 
-\bibitem{dpr2020}
-Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and Wen-tau Yih.
-\textit{Dense Passage Retrieval for Open-Domain Question Answering}.
-2020.
-\url{https://arxiv.org/abs/2004.04906}
+\bibitem{Apple2024HEWER}
+Apple Machine Learning Research. (2024).
+\textit{Humanizing Word Error Rate for ASR Transcript Readability and Accessibility}.
+Available at: \url{https://machinelearning.apple.com/research/humanizing-wer}
+[Accessed 1 May 2026].
 
-\bibitem{rag2020}
-Patrick Lewis et al.
-\textit{Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks}.
-NeurIPS, 2020.
-\url{https://arxiv.org/abs/2005.11401}
+\bibitem{PODTILE2024}
+Ghazimatin, A., et al. (2024).
+PODTILE: Facilitating podcast episode browsing with auto-generated chapters.
+Available at: \url{https://arxiv.org/abs/2410.16148}
+[Accessed 1 May 2026].
 
-\bibitem{tofueval2024}
-Liyan Tang et al.
-\textit{TofuEval: Evaluating Hallucinations of LLMs on Topic-Focused Dialogue Summarization}.
-NAACL, 2024.
-\url{https://arxiv.org/abs/2402.13249}
+\bibitem{Reimers2019SBERT}
+Reimers, N. and Gurevych, I. (2019).
+Sentence-BERT: Sentence embeddings using Siamese BERT-networks.
+\textit{Proceedings of EMNLP-IJCNLP}.
+Available at: \url{https://aclanthology.org/D19-1410/}
+[Accessed 1 May 2026].
 
-\bibitem{valle2023}
-Chengyi Wang et al.
-\textit{VALL-E: Neural Codec Language Models are Zero-Shot Text to Speech Synthesizers}.
-2023.
-\url{https://arxiv.org/abs/2301.02111}
+\bibitem{Muennighoff2023MTEB}
+Muennighoff, N., Tazi, N., Magne, L. and Reimers, N. (2023).
+MTEB: Massive text embedding benchmark.
+\textit{Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics}.
+Available at: \url{https://aclanthology.org/2023.eacl-main.148/}
+[Accessed 1 May 2026].
 
-\bibitem{voicebox2023}
-Meta AI.
-\textit{Voicebox: Text-Guided Multilingual Universal Speech Generation at Scale}.
-2023.
-\url{https://voicebox.metademolab.com/}
+\bibitem{Spotify2022NLS}
+Spotify Engineering. (2022).
+\textit{Introducing Natural Language Search for Podcast Episodes}.
+Available at: \url{https://engineering.atspotify.com/2022/03/introducing-natural-language-search-for-podcast-episodes}
+[Accessed 1 May 2026].
 
-\bibitem{elevenlabs2026}
-ElevenLabs.
-\textit{AI Dubbing: Localize Content Across 29 Languages}.
-2026.
-\url{https://elevenlabs.io/dubbing-studio}
+\bibitem{Johnson2017FAISS}
+Johnson, J., Douze, M. and Jégou, H. (2017).
+Billion-scale similarity search with GPUs.
+Available at: \url{https://arxiv.org/abs/1702.08734}
+[Accessed 1 May 2026].
 
-\bibitem{adobe2026}
-Adobe Podcast.
-\textit{Enhance Speech from Adobe Podcast}.
-2026.
-\url{https://podcast.adobe.com/en/enhance}
+\bibitem{Wang2021Milvus}
+Wang, J., et al. (2021).
+Milvus: A purpose-built vector data management system.
+\textit{Proceedings of the 2021 International Conference on Management of Data}.
+Available at: \url{https://dl.acm.org/doi/10.1145/3448016.3457550}
+[Accessed 1 May 2026].
 
-\bibitem{spleeter2020}
-Deezer Research.
-\textit{Spleeter: A Fast and Efficient Music Source Separation Tool}.
-2020.
-\url{https://research.deezer.com/publication/2020/06/24/releasing-spleeter.html}
+\bibitem{Lewis2020RAG}
+Lewis, P., et al. (2020).
+Retrieval-augmented generation for knowledge-intensive NLP tasks.
+\textit{Advances in Neural Information Processing Systems}.
+Available at: \url{https://arxiv.org/abs/2005.11401}
+[Accessed 1 May 2026].
 
-\bibitem{demucs2022}
-Simon Rouard, Francisco Massa, and Alexandre D\'efossez.
-\textit{Hybrid Transformers for Music Source Separation}.
-2022.
-\url{https://arxiv.org/abs/2211.08553}
+\bibitem{Huang2025Hallucination}
+Huang, L., et al. (2025).
+A survey on hallucination in large language models: principles, taxonomy, challenges, and open questions.
+\textit{ACM Transactions on Information Systems, 43(2), Article 42, 1–55}.
+Available at: \url{https://dl.acm.org/doi/10.1145/3703155}
+[Accessed 1 May 2026].
 
-\bibitem{deldjoo2024}
-Yashar Deldjoo, Dietmar Jannach, Alejandro Bellog\'in, Alessandro Difonzo, and Dario Zanzonelli.
-\textit{Fairness in Recommender Systems: Research Landscape and Future Directions}.
-User Modeling and User-Adapted Interaction, 2024.
-\url{https://link.springer.com/article/10.1007/s11257-023-09364-z}
+\bibitem{VoxRAG2025}
+Rackauckas, Z. and Hirschberg, J. (2025).
+VoxRAG: A step toward transcription-free RAG systems in spoken question answering.
+Available at: \url{https://arxiv.org/abs/2505.17326}
+[Accessed 1 May 2026].
 
-\bibitem{knight2023}
-Arvind Narayanan.
-\textit{Understanding Social Media Recommendation Algorithms}.
-Knight First Amendment Institute, 2023.
-\url{https://knightcolumbia.org/content/understanding-social-media-recommendation-algorithms}
+\bibitem{Koenecke2020ASRBias}
+Koenecke, A., Nam, A., Lake, E., Nudell, J., Quartey, M., Mengesha, Z., Toups, C., Rickford, J. R., Jurafsky, D. and Goel, S. (2020).
+Racial disparities in automated speech recognition.
+\textit{Proceedings of the National Academy of Sciences}, 117(14), 7684--7689.
+Available at: \url{https://www.pnas.org/doi/10.1073/pnas.1915768117}
+[Accessed 1 May 2026].
 
-\bibitem{eu2025gpai}
-European Commission.
-\textit{The General-Purpose AI Code of Practice}.
-2025.
-\url{https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai}
+\bibitem{Bain2025ZeroClick}
+Bain \& Company. (2025).
+\textit{Goodbye clicks, hello AI: Zero-click search redefines marketing}.
+Available at: \url{https://www.bain.com/insights/goodbye-clicks-hello-ai-zero-click-search-redefines-marketing/}
+[Accessed 1 May 2026].
 
-\bibitem{euarticle50}
-European Union.
-\textit{EU AI Act, Article 50: Transparency Obligations for Providers and Deployers of Certain AI Systems}.
-\url{https://artificialintelligenceact.eu/article/50/}
+\bibitem{AP2026CMA}
+Associated Press. (2026).
+\textit{UK proposes forcing Google to let publishers opt out of AI summaries}.
+Available at: \url{https://apnews.com/article/f2bf8545f3b987aa1900a829c0d01390}
+[Accessed 1 May 2026].
 
-\bibitem{uk2026copyright}
-UK Government.
-\textit{Report on Copyright and Artificial Intelligence}.
-2026.
-\url{https://www.gov.uk/government/publications/report-and-impact-assessment-on-copyright-and-artificial-intelligence/report-on-copyright-and-artificial-intelligence}
 
-\bibitem{usco2025ai}
-U.S. Copyright Office.
-\textit{Copyright and Artificial Intelligence}.
-2025.
-\url{https://www.copyright.gov/ai/}
+\bibitem{WIPO2026Copyright}
+World Intellectual Property Organization. (n.d.).
+\textit{Copyright}.
+Available at: \url{https://www.wipo.int/en/web/copyright}
+[Accessed 1 May 2026].
 
-\bibitem{nist2023}
-National Institute of Standards and Technology.
-\textit{Artificial Intelligence Risk Management Framework}.
-2023.
-\url{https://www.nist.gov/itl/ai-risk-management-framework}
 
-\bibitem{oecdai}
-OECD.
-\textit{OECD AI Principles}.
-\url{https://www.oecd.org/en/topics/ai-principles.html}
+\bibitem{GovUK2026Copyright}
+GOV.UK. (n.d.).
+\textit{How copyright protects your work}.
+Available at: \url{https://www.gov.uk/copyright}
+[Accessed 1 May 2026].
 
-\bibitem{ico2025}
-Information Commissioner's Office.
-\textit{Biometric Data Guidance: Biometric Recognition}.
-\url{https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/biometric-data-guidance-biometric-recognition/}
-
-\bibitem{ftc2023voice}
-Federal Trade Commission.
-\textit{The FTC Voice Cloning Challenge}.
-2023.
-\url{https://www.ftc.gov/news-events/contests/ftc-voice-cloning-challenge}
-
-\bibitem{notebooklm2024}
-Google.
-\textit{NotebookLM Audio Overviews}.
-2024.
-\url{https://blog.google/innovation-and-ai/products/notebooklm-audio-overviews/}
+\bibitem{C2PA2026}
+Coalition for Content Provenance and Authenticity. (2026).
+\textit{C2PA Technical Specification}.
+Available at: \url{https://spec.c2pa.org/}
+[Accessed 1 May 2026].
 
 \end{thebibliography}
 

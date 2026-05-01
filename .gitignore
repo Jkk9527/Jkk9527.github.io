@@ -22,4 +22,5 @@
 # TeX editor backups and temporary files
 *.bak
 *.tmp
-*~
+figures/
+.obsidian/
