@@ -103,7 +103,7 @@ The black-box problem also affects creators and platforms. Creators may publish 
 
 \subsection{The AI Transformation: From Audio Object to Knowledge Object}
 
-AI changes the status of a podcast. It can turn a podcast from a linear audio object into a structured knowledge object. As Figure~\ref{fig:pipeline} shows, the basic pipeline is: automatic speech recognition converts speech into a time-aligned transcript; speaker diarization estimates who spoke; semantic chunking divides the transcript into meaningful units; embeddings and vector search make those units findable; and retrieval-augmented generation produces summaries, answers and recommendations grounded in the original audio evidence.
+AI changes the status of a podcast. It can turn a podcast from a linear audio object into a structured knowledge object. As Figure~\ref{fig:pipeline} shows, the basic pipeline is: automatic speech recognition converts speech into a time-aligned transcript; speaker diarization estimates which speaker or speaker cluster spoke when; semantic chunking divides the transcript into meaningful units; embeddings and vector search make those units findable; and retrieval-augmented generation produces summaries, answers and recommendations grounded in the original audio evidence.
 
 
 \begin{figure}[!htbp]
@@ -134,8 +134,8 @@ As Figure~\ref{fig:overall} shows, the remainder of the blog proceeds in four st
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=1.0\linewidth]{figures/overall.pdf}
-\caption[The podcast AI pipeline from audio object to searchable knowledge object]{
-\textbf{From audio black boxes to searchable podcast knowledge.}
+\caption{
+\textbf{Roadmap from audio black boxes to searchable podcast knowledge.}
 The figure summarises the central argument of this blog: AI can transform a podcast from one long, difficult-to-search audio file into structured knowledge layers. The key design principle is that AI should guide users back to original listening rather than extract value from the podcast.
 }
 \label{fig:overall}
@@ -154,7 +154,9 @@ For knowledge work, this is both powerful and awkward. The medium fits daily lif
 
 \subsubsection{The Scale of the Industry}
 
-The scale of podcasting shows why this problem matters. As Figure~\ref{fig:podcast-adoption} shows, Edison Research reported in \textit{The Podcast Consumer 2025} that 73\% of Americans aged 12 or older had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week \cite{Edison2025}. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week \cite{Edison2025}. Globally, DataReportal reported that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{DataReportal2025}. The podcast use is now widespread enough that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium.YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem \cite{YouTube2025}.
+The scale of podcasting shows why this problem matters. As Figure~\ref{fig:podcast-adoption} shows, Edison Research reported in \textit{The Podcast Consumer 2025} that 73\% of Americans aged 12 or older had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week \cite{Edison2025}. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week \cite{Edison2025}. Globally, DataReportal reported that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{DataReportal2025}. These figures are not directly comparable because they measure different populations and behaviours, but together they show the scale of podcast use.
+
+Podcast use is now widespread enough that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium. YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem \cite{YouTube2025}.
 
 \begin{figure}[!htbp]
 \centering
@@ -177,7 +179,7 @@ Podcasting is changing from a casual audio format into a searchable and platform
 
 \subsubsection{Access Challenge: Users Cannot Search, Skim or Cite Podcasts}
 
-For users, the problem is not that podcasts are uninformative; it is that their information is difficult to access without listening linearly.There are specifically three points:
+For users, the problem is not that podcasts are uninformative; it is that their information is difficult to access without listening linearly. This problem has three dimensions:
 
 
 
@@ -185,7 +187,7 @@ For users, the problem is not that podcasts are uninformative; it is that their 
 
 Users cannot easily search and locate ideas inside long episodes. If a listener wants a five-minute discussion of climate policy inside a three-hour interview, the title and description may not help.
 
-This is a semantic problem, not only a text problem.The speaker may also use different words from the user's query. A search for ``carbon tax'' may miss a segment where the guest says ``set a price for emissions''.
+This is a semantic problem, not only a text problem. The speaker may also use different words from the user's query. A search for ``carbon tax'' may miss a segment where the guest says ``set a price for emissions''.
  Even if a transcript exists, the transcript may still be too long. Good podcast search should retrieve ideas, arguments and moments, not only whole episodes.
 
 \paragraph{Skimming Problem}
@@ -198,7 +200,7 @@ Students, journalists and researchers need precise references. A written source 
 
 \subsubsection{Discovery Challenge: Creators Are Hard to Find Without Rich Metadata}
 
-Without richer semantic metadata, creators with valuable knowledge may remain invisible simply because platforms cannot understand what their episodes contain with the reasons:
+Without richer semantic metadata, creators with valuable knowledge may remain invisible simply because platforms cannot understand what their episodes contain, for the following reasons:
 
 \paragraph{Metadata Is Too Thin}
 
@@ -226,7 +228,7 @@ This shift is already visible in mainstream products. Apple introduced transcrip
 
 The case for AI adoption is therefore strong. AI can decode speech into text, structure long conversations, support semantic search, improve accessibility, generate summaries and make creators easier to discover. But the case for adoption is not the same as the case for unrestricted deployment. AI solves the audio black-box problem only if it is designed to preserve accuracy, fairness and creator value.
 
-\section{AI Technologies Application: Three Steps from Audio to Searchable Knowledge}
+\section{Applications of AI Technologies: Three Steps from Audio to Searchable Knowledge}
 
 The most important AI transformation in podcasting can be understood through three technical functions: AI decodes speech into text, structures long transcripts into searchable knowledge units, and mediates access through summaries, question-answering and recommendations.
 
@@ -248,11 +250,11 @@ These research advances also explain why transcription is moving from a speciali
 
 \subsubsection{Speaker Diarization: Who Spoke When?}
 
-Speaker diarization answers the question: who spoke when? In a podcast conversation, meaning depends on speaker attribution. A claim made by the guest is different from a challenge made by the host. A joke may be understandable only because of who said it and how another speaker responded.
+Speaker diarization answers the question: which speaker or speaker cluster spoke when; real-world speaker names may still require metadata or human confirmation. In a podcast conversation, meaning depends on speaker attribution. A claim made by the guest is different from a challenge made by the host. A joke may be understandable only because of who said it and how another speaker responded.
 
 A typical diarization system detects speech activity, segments the audio, extracts speaker embeddings and clusters segments that appear to belong to the same speaker. \textbf{pyannote.audio} is a widely used open-source toolkit for speaker diarization, including speaker segmentation, neural speaker embedding and clustering \cite{Bredin2023pyannote}. Diarization is technically important because a correct sentence assigned to the wrong speaker is still a serious error.
 
-So,for podcast AI, the output of transcription should therefore be structured data, not just text:
+For podcast AI, the output of transcription should therefore be structured data, not just text:
 
 \begin{quote}
 \texttt{episode\_id, segment\_id, speaker\_id, start\_time, end\_time, transcript\_text, confidence}
@@ -285,7 +287,7 @@ At scale, vector search requires efficient indexing. Systems such as \textbf{FAI
 \includegraphics[width=0.6\linewidth]{figures/semantic.png}
 \caption[Segment-level semantic search interface for podcast knowledge]{
 \textbf{Segment-level semantic search for podcast knowledge.}
-The mock interface shows how podcast AI can retrieve meaning rather than only exact keywords. A query such as ``carbon tax'' returns timestamped transcript segments with speaker or chapter labels, short contextual snippets and playback actions. This design supports the main argument of the blog: podcast AI should help users find relevant moments and then return to the original audio for verification, rather than replacing listening with unsupported AI answers.
+The mock interface shows how podcast AI can retrieve meaning rather than only exact keywords. A query about carbon taxes returns timestamped transcript segments with speaker or chapter labels, short contextual snippets and playback actions. This design supports the main argument of the blog: podcast AI should help users find relevant moments and then return to the original audio for verification, rather than replacing listening with unsupported AI answers.
 }
 \label{fig:semantic-interface}
 \end{figure}
@@ -304,7 +306,7 @@ Retrieval-Augmented Generation, or RAG, combines a generative language model wit
 A podcast RAG system works in four steps. First, the user's question is embedded. Second, the system retrieves relevant transcript chunks. Third, the language model generates an answer using those chunks. Fourth, the answer cites the episode, speaker and timestamp that support it. This structure is important because large language models can hallucinate: they may generate fluent text that is unsupported or inaccurate \cite{Huang2025Hallucination}. RAG does not eliminate hallucination; it makes hallucination easier to detect because important claims can be checked against retrieved transcript evidence.
 
 
-A responsible podcast Q\&A system should not simply answer the user; it should show which transcript segment and timestamp support the answer. The principle should be simple: no timestamp, no trust.The following illustrative example shows why timestamped evidence matters. Suppose a user asks a podcast AI system about a policy discussion:
+A responsible podcast Q\&A system should not simply answer the user; it should show which transcript segment and timestamp support the answer. The principle should be simple: no timestamp, no trust. The following illustrative example shows why timestamped evidence matters. Suppose a user asks a podcast AI system about a policy discussion:
 
 \begin{quote}
 \textbf{User query:} What did the guest say about carbon taxes?\\[0.3em]
@@ -351,7 +353,7 @@ Consider the example from the introduction:
 
 \begin{quote}
 \textbf{Original:} Carbon taxes can work if revenue is redistributed to households.\\
-\textbf{Error summary:} The guest supports carbon taxes.
+\textbf{Misleading summary:} The guest supports carbon taxes.
 \end{quote}
 
 The summary is not completely false, but it removes the condition that makes the argument meaningful. In political, scientific or medical discussions, this difference can be very important. A responsible system should therefore mark the difference between direct quotation, close paraphrase and generated interpretation.
@@ -373,7 +375,7 @@ This design can include three practical controls:
 \end{itemize}
 
 
-\subsection{Fairness and Visibility: Who Decides Which Is Heard?}
+\subsection{Fairness and Visibility: Who Decides Whose Voices Are Heard?}
 
 The second ethical issue is fairness. AI discovery may help users find niche creators, but it may also reinforce inequality if the system favours content that is easier to transcribe, classify and summarise.
 
@@ -400,7 +402,7 @@ If the platform turns the podcast library into a RAG-powered answer engine, user
 
 \subsubsection{Creator Value and Platform Capture}
 
-The creator produces the knowledge, but the AI interface captures the attention. The creator may lose the listen, the completion rate and the ad revenue as AI becomes a value extractor.
+The creator produces the knowledge, but the AI interface captures the attention. They may lose listens, completion rates and advertising revenue as AI becomes a value extractor.
 
 This raises a basic question: who should profit when AI turns a creator's long-form conversation into instant answers? If a platform uses a podcast episode to answer a user's question, the platform benefits from the creator's labour. If the AI interface captures the user's attention without returning value to the people who produced the episode, then attribution alone is not enough.
 
@@ -418,7 +420,7 @@ Platforms should offer granular consent options to creators. Permission should n
     \item \textbf{Question-answering:} allowing users to ask an AI system questions that are answered from the episode without necessarily playing the original audio.
 \end{enumerate}
 
-The permissions should be separated rather than bundled together.For example, a creator may allow accessibility transcripts and search indexing, but reject model training. Another creator may allow short chapter summaries, but reject full conversational Q\&A features that could substitute for listening. The platform interface should make these choices visible, reversible and understandable. It should also specify whether creators receive attribution, playback traffic or revenue when AI-generated answers are based on their work.
+The permissions should be separated rather than bundled together. For example, a creator may allow accessibility transcripts and search indexing, but reject model training. Another creator may allow short chapter summaries, but reject full conversational Q\&A features that could substitute for listening. The platform interface should make these choices visible, reversible and understandable. It should also specify whether creators receive attribution, playback traffic or revenue when AI-generated answers are based on their work.
 
 
 Copyright law already recognises that creators have rights over the expression of their original works, including copying, distribution, adaptation and public communication \cite{WIPO2026Copyright,GovUK2026Copyright}. However, copyright does not straightforwardly solve every AI podcast question, because an AI answer may extract facts, themes or arguments rather than reproduce a long passage verbatim. This is why podcast AI governance should not rely on copyright alone. It also needs consent, attribution, provenance and fair value-sharing mechanisms. Podcast AI needs a similar norm for knowledge provenance: which episode supported this answer, whose voice was used, and what value flowed back? If AI interfaces monetise podcast knowledge, attribution alone is not enough; creators need control over use and a fair share of the value created from their work.
@@ -447,7 +449,7 @@ Ownership and value extraction & AI answers replace listening while platforms ca
 
 
 
-\section{Conclusion: AI Should Unlock Podcast Knowledge, Not Extract It}
+\section{Conclusion: Unlock Podcast Knowledge, Not Extract It}
 
 
 
@@ -455,7 +457,7 @@ Ownership and value extraction & AI answers replace listening while platforms ca
 
 Podcasting matters because it preserves forms of knowledge that short-form media often lose: long explanation, human voice, disagreement, uncertainty and trust. But these same qualities make podcasts hard to navigate. The audio black box limits search, access and discovery.
 
-AI creates a knowledge pipeline: decode, structure and mediate.The first step is decoding. ASR and diarization turn speech into attributed, timestamped text. The second step is structuring. Semantic chunking, embeddings and vector search turn long transcripts into searchable knowledge units. The third step is mediation. RAG, summaries and recommendations help users ask questions, preview content and jump to relevant moments.Together, these technologies can make podcasts more useful as knowledge sources.
+AI creates a knowledge pipeline: decode, structure and mediate. The first step is decoding. ASR and diarization turn speech into attributed, timestamped text. The second step is structuring. Semantic chunking, embeddings and vector search turn long transcripts into searchable knowledge units. The third step is mediation. RAG, summaries and recommendations help users ask questions, preview content and jump to relevant moments.Together, these technologies can make podcasts more useful as knowledge sources.
 
 \subsection{The Crucial Choice: Parasitic Extraction vs. Symbiotic Ecosystem}
 
@@ -464,7 +466,7 @@ In a \textbf{parasitic system}, platforms turn creators' voices into unpaid infr
 In a \textbf{symbiotic ecosystem}, AI helps people find, understand and return to human conversations. Transcripts are editable. Summaries cite timestamps. Recommendations are explainable. Creators can control AI uses of their work. Revenue flows back when AI interfaces monetise creator knowledge.
 
 
-In my opinion, AI should unlock podcast knowledge, not extract it. The future of podcast AI should be a symbiotic ecosystem not a parasitic system. The argument of this blog is therefore simple: AI should make podcast listening more searchable, inclusive and rewarding, but it should not turn creators' work into free raw material for platform-controlled knowledge extraction.
+In my opinion, AI should unlock podcast knowledge, not extract it. The future of podcast AI should be a symbiotic ecosystem, not a parasitic system. The argument of this blog is therefore simple: AI should make podcast listening more searchable, inclusive and rewarding, but it should not turn creators' work into free raw material for platform-controlled knowledge extraction.
 
 \begin{thebibliography}{99}
 
@@ -539,7 +541,7 @@ Available at: \url{https://arxiv.org/abs/2006.11477}
 [Accessed 1 May 2026].
 
 \bibitem{OpenAI2026STT}
-OpenAI. (2026).
+OpenAI. (n.d.).
 \textit{Speech to text: OpenAI API documentation}.
 Available at: \url{https://developers.openai.com/api/docs/guides/speech-to-text}
 [Accessed 1 May 2026].
@@ -606,7 +608,7 @@ Available at: \url{https://arxiv.org/abs/2005.11401}
 \bibitem{Huang2025Hallucination}
 Huang, L., et al. (2025).
 A survey on hallucination in large language models: principles, taxonomy, challenges, and open questions.
-\textit{ACM Transactions on Information Systems, 43(2), Article 42, 1–55}.
+\textit{ACM Transactions on Information Systems, 43(2), Article 42, 1--55}.
 Available at: \url{https://dl.acm.org/doi/10.1145/3703155}
 [Accessed 1 May 2026].
 
@@ -617,13 +619,13 @@ Available at: \url{https://arxiv.org/abs/2505.17326}
 [Accessed 1 May 2026].
 
 \bibitem{LangChain2026Retrieval}
-LangChain. (2026).
+LangChain. (n.d.).
 \textit{Retrieval}.
 Available at: \url{https://docs.langchain.com/oss/python/langchain/retrieval}
 [Accessed 1 May 2026].
 
 \bibitem{LlamaIndex2026RAG}
-LlamaIndex. (2026).
+LlamaIndex. (n.d.).
 \textit{Introduction to RAG}.
 Available at: \url{https://developers.llamaindex.ai/python/framework/understanding/rag/}
 [Accessed 1 May 2026].
