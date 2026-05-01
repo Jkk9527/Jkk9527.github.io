@@ -3,209 +3,1291 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="A blog report on how AI transforms podcasting from audio black boxes into searchable, accessible and governable knowledge infrastructure." />
-  <title>From Audio Black Boxes to Searchable Knowledge | AI and Podcasting</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js" defer></script>
+  <meta name="description" content="Online blog report on how AI turns podcasts from audio black boxes into searchable knowledge, and the ethical risks that follow." />
+  <title>Unlocking the Audio Black Box | AI and Podcast Knowledge</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
   <style>
-    :root{
-      --bg:#f6f4ef;
-      --paper:#fffdf8;
-      --ink:#171717;
-      --muted:#5f635f;
-      --line:#e4ded1;
-      --accent:#6d47ff;
-      --accent-2:#00a88f;
-      --accent-3:#ff8b3d;
-      --accent-4:#223a5e;
-      --soft:#ece7ff;
-      --soft-2:#e6f7f3;
-      --shadow:0 18px 50px rgba(24,24,24,.10);
-      --radius:24px;
-      --content:1180px;
+    :root {
+      --canvas: #f7f3eb;
+      --paper: #fffdfa;
+      --ink: #151716;
+      --muted: #5d655f;
+      --line: #e5ddcf;
+      --teal: #0e8f7e;
+      --blue: #2d5ea8;
+      --amber: #e79635;
+      --rose: #bf536b;
+      --slate: #21313a;
+      --soft-teal: #e5f5f1;
+      --soft-blue: #e7eefb;
+      --soft-amber: #fff0df;
+      --soft-rose: #f8e8ed;
+      --content: 1180px;
+      --measure: 760px;
+      --radius: 16px;
+      --shadow: 0 20px 60px rgba(33, 49, 58, .10);
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
       background:
-        radial-gradient(circle at 10% 0%, rgba(109,71,255,.14), transparent 34rem),
-        radial-gradient(circle at 92% 14%, rgba(0,168,143,.13), transparent 34rem),
-        var(--bg);
-      color:var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      line-height:1.68;
+        linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0) 420px),
+        repeating-linear-gradient(90deg, rgba(33,49,58,.035) 0, rgba(33,49,58,.035) 1px, transparent 1px, transparent 76px),
+        var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.68;
+      text-rendering: optimizeLegibility;
     }
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-    .progress{
-      position:fixed; top:0; left:0; width:0%; height:4px; z-index:9999;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
-      box-shadow:0 0 20px rgba(109,71,255,.45);
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      z-index: 1000;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal), var(--blue), var(--amber));
+      box-shadow: 0 0 18px rgba(14,143,126,.35);
     }
-    .topbar{
-      position:sticky; top:0; z-index:800;
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      border-bottom: 1px solid rgba(229,221,207,.88);
+      background: rgba(247,243,235,.84);
       backdrop-filter: blur(16px);
-      background:rgba(246,244,239,.78);
-      border-bottom:1px solid rgba(228,222,209,.78);
     }
-    .nav{
-      max-width:var(--content); margin:0 auto; padding:12px 20px;
-      display:flex; align-items:center; justify-content:space-between; gap:18px;
+
+    .nav {
+      max-width: var(--content);
+      margin: 0 auto;
+      padding: 12px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
     }
-    .brand{font-weight:850; letter-spacing:-.03em; display:flex; gap:10px; align-items:center}
-    .brand .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 0 6px rgba(109,71,255,.12)}
-    .navlinks{display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end}
-    .navlinks a{font-size:14px;color:#333;padding:7px 10px;border-radius:999px}
-    .navlinks a:hover{background:rgba(109,71,255,.09);text-decoration:none}
-    header.hero{
-      max-width:var(--content); margin:0 auto; padding:70px 20px 32px;
-      display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center;
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 850;
+      letter-spacing: 0;
+      white-space: nowrap;
     }
-    .eyebrow{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.72); border:1px solid var(--line); color:var(--muted); font-size:13px; font-weight:700}
-    .hero h1{font-size:clamp(29px,3vw,50px); line-height:1.15; letter-spacing:-.02em; margin:10px 0 10px}
-    .hero .subtitle{font-size:clamp(18px,2.2vw,24px); color:#373a36; max-width:760px; line-height:1.45}
-    .hero-meta{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px}
-    .pill{border:1px solid var(--line); background:rgba(255,255,255,.68); padding:9px 13px; border-radius:999px; font-size:13px; color:#353535; font-weight:700}
-    .hero-card{
-      background:linear-gradient(155deg,rgba(255,255,255,.92),rgba(255,253,248,.76));
-      border:1px solid rgba(228,222,209,.85); border-radius:32px; padding:24px; box-shadow:var(--shadow); overflow:hidden;
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      background:
+        linear-gradient(135deg, rgba(14,143,126,.98), rgba(45,94,168,.96));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 15px;
+      box-shadow: 0 9px 20px rgba(45,94,168,.22);
     }
-    .blackbox{
-      display:grid; gap:16px;
+
+    .navlinks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px;
     }
-    .audio-box,.knowledge-box{
-      border-radius:22px; padding:18px; border:1px solid var(--line); background:#fff;
+
+    .navlinks a {
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: #2f3632;
+      font-size: 14px;
+      font-weight: 750;
     }
-    .audio-line{height:76px; display:flex; align-items:center; gap:4px; padding:0 8px; border-radius:14px; background:#111; overflow:hidden}
-    .bar{width:5px; border-radius:999px; background:linear-gradient(180deg,#a58bff,#5df0da); opacity:.9; animation:pulse 1.8s ease-in-out infinite alternate}
-    .bar:nth-child(2n){animation-duration:2.2s}.bar:nth-child(3n){animation-duration:1.45s}.bar:nth-child(5n){animation-duration:2.65s}
-    @keyframes pulse{from{transform:scaleY(.32)}to{transform:scaleY(1)}}
-    .knowledge-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
-    .mini{padding:12px;border-radius:16px;background:var(--soft);font-size:13px;font-weight:800;color:#2e255c}
-    .mini:nth-child(2){background:var(--soft-2);color:#0b5c50}.mini:nth-child(3){background:#fff1e8;color:#6b3512}.mini:nth-child(4){background:#eaf0fb;color:#223a5e}
-    main{max-width:var(--content); margin:0 auto; padding:0 20px 80px}
-    .layout{display:grid; grid-template-columns:260px minmax(0,1fr); gap:30px; align-items:start}
-    aside.toc{position:sticky; top:74px; padding:18px; border-radius:22px; background:rgba(255,255,255,.70); border:1px solid var(--line); box-shadow:0 10px 28px rgba(0,0,0,.04)}
-    aside.toc h3{margin:0 0 10px; font-size:14px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
-    aside.toc a{display:block; padding:8px 10px; color:#353535; border-radius:12px; font-size:14px; line-height:1.35}
-    aside.toc a:hover{background:rgba(109,71,255,.08); text-decoration:none}
-    section.card{
-      background:rgba(255,253,248,.82); border:1px solid rgba(228,222,209,.9); border-radius:var(--radius); padding:34px; margin:28px 0; box-shadow:0 16px 45px rgba(20,20,20,.06);
+
+    .navlinks a:hover,
+    .navlinks a.active {
+      color: var(--teal);
+      background: rgba(14,143,126,.10);
+      text-decoration: none;
     }
-    section.card h2{font-size:clamp(30px,4vw,46px); line-height:1.04; letter-spacing:-.055em; margin:0 0 18px}
-    section.card h3{font-size:clamp(22px,2.5vw,30px); line-height:1.18; letter-spacing:-.035em; margin:34px 0 10px}
-    section.card h4{font-size:18px; margin:22px 0 8px}
-    .lead{font-size:19px;color:#333;line-height:1.6}
-    .thesis{
-      margin:24px 0; padding:22px; border-radius:22px; background:linear-gradient(135deg,rgba(109,71,255,.10),rgba(0,168,143,.10)); border:1px solid rgba(109,71,255,.16);
-      font-size:20px; font-weight:800; line-height:1.45;
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(ellipse at 78% 18%, rgba(61, 216, 190, .28), transparent 28rem),
+        radial-gradient(ellipse at 18% 78%, rgba(231, 150, 53, .13), transparent 30rem),
+        radial-gradient(ellipse at 56% 108%, rgba(255,255,255,.16), transparent 34rem),
+        linear-gradient(115deg, rgba(33,49,58,.98) 0%, rgba(33,49,58,.96) 52%, rgba(14,143,126,.92) 100%);
+      color: #fff;
     }
-    .cite{font-size:.86em; font-weight:800; color:var(--accent); vertical-align:baseline; white-space:nowrap}
-    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:22px 0}
-    .stat{background:#fff; border:1px solid var(--line); border-radius:22px; padding:18px; box-shadow:0 10px 26px rgba(0,0,0,.04)}
-    .stat .num{font-size:34px; line-height:1; font-weight:900; letter-spacing:-.05em; color:var(--accent)}
-    .stat .label{font-size:14px; color:var(--muted); margin-top:7px}
-    .chart-card{background:#fff; border:1px solid var(--line); border-radius:24px; margin:22px 0; padding:18px; box-shadow:0 12px 32px rgba(0,0,0,.05)}
-    .hero-card,.chart-card,.flow{position:relative}
-    .figure-download{position:absolute; top:10px; right:10px; z-index:5; border:1px solid rgba(95,99,95,.22); background:rgba(255,255,255,.72); color:var(--muted); border-radius:999px; padding:4px 8px; font-size:11px; font-weight:800; line-height:1; cursor:pointer; opacity:.36; backdrop-filter:blur(8px)}
-    .figure-download:hover{opacity:.88}
-    .figure-download:focus-visible{opacity:1; outline:2px solid var(--accent); outline-offset:2px}
-    .chart-title{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:8px}
-    .chart-title h4{margin:0;font-size:18px;line-height:1.3}
-    .chart-note{font-size:12px; color:var(--muted); max-width:620px; line-height:1.45}
-    .chart{width:100%; height:360px}
-    .chart.small{height:300px}
-    .flow{display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin:22px 0}
-    .flow .step{position:relative; padding:16px 12px; min-height:94px; border-radius:18px; background:#fff; border:1px solid var(--line); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; font-weight:850; line-height:1.25; box-shadow:0 8px 22px rgba(0,0,0,.04)}
-    .flow .step span{font-size:12px; font-weight:700; color:var(--muted); margin-top:6px}
-    .flow .step:not(:last-child)::after{content:"→"; position:absolute; right:-14px; top:50%; transform:translateY(-50%); color:var(--accent); font-size:20px; font-weight:900; z-index:2}
-    .callout{padding:18px 20px; background:#111; color:#fff; border-radius:22px; margin:24px 0; box-shadow:0 16px 36px rgba(0,0,0,.16)}
-    .callout strong{color:#aaf7e8}
-    .note{padding:16px 18px; border-left:5px solid var(--accent); background:rgba(109,71,255,.08); border-radius:14px; color:#353535}
-    .tech-tabs{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:20px 0}
-    details.tech{background:#fff; border:1px solid var(--line); border-radius:20px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,.04)}
-    details.tech summary{cursor:pointer; font-weight:900; color:#212121; list-style:none}
-    details.tech summary::-webkit-details-marker{display:none}
-    details.tech summary::after{content:"+"; float:right; color:var(--accent); font-weight:900}
-    details.tech[open] summary::after{content:"–"}
-    blockquote{margin:22px 0; padding:20px 24px; border-left:5px solid var(--accent-2); background:rgba(0,168,143,.08); border-radius:16px; color:#2e3531}
-    table{border-collapse:collapse; width:100%; background:#fff; border-radius:20px; overflow:hidden; box-shadow:0 10px 24px rgba(0,0,0,.04); margin:22px 0}
-    th,td{padding:14px 14px; border-bottom:1px solid var(--line); vertical-align:top; text-align:left; font-size:14px}
-    th{background:#111; color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:.04em}
-    tr:last-child td{border-bottom:0}
-    .refs ol{padding-left:24px}
-    .refs li{margin:11px 0; overflow-wrap:anywhere}
-    .footer{max-width:var(--content); margin:0 auto 50px; padding:24px 20px; color:var(--muted); font-size:14px}
-    .backtop{position:fixed; right:18px; bottom:18px; border:0; background:#111; color:#fff; border-radius:999px; padding:12px 14px; cursor:pointer; box-shadow:0 12px 30px rgba(0,0,0,.2); display:none}
-    .backtop.show{display:block}
-    @media (max-width:980px){
-      header.hero{grid-template-columns:1fr; padding-top:42px}
-      .layout{grid-template-columns:1fr}
-      aside.toc{position:relative; top:0}
-      .grid-3{grid-template-columns:1fr}
-      .flow{grid-template-columns:1fr 1fr}
-      .flow .step::after{display:none}
-      .tech-tabs{grid-template-columns:1fr}
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: auto -10% 0 -10%;
+      height: 260px;
+      background:
+        radial-gradient(ellipse at 74% 65%, rgba(126, 241, 220, .30), transparent 34rem),
+        linear-gradient(180deg, rgba(33,49,58,0), rgba(17, 31, 36, .42));
+      pointer-events: none;
     }
-    @media (max-width:640px){
-      .nav{align-items:flex-start; flex-direction:column}
-      .navlinks{justify-content:flex-start}
-      section.card{padding:24px 18px}
-      .chart{height:310px}
-      .flow{grid-template-columns:1fr}
-      th,td{font-size:13px; padding:12px 10px}
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 190px;
+      background:
+        linear-gradient(180deg, rgba(33,49,58,0), rgba(18, 33, 38, .44)),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: auto, 76px 76px, 76px 76px;
+      opacity: .86;
+      mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 100%);
+      pointer-events: none;
     }
-    @media print{
-      .topbar,.progress,.backtop{display:none!important}
-      body{background:#fff}
-      section.card{box-shadow:none; break-inside:avoid}
-      a{color:#000}
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: var(--content);
+      margin: 0 auto;
+      padding: 74px 22px 72px;
+      min-height: min(760px, calc(100vh - 58px));
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .82fr);
+      align-items: center;
+      gap: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      max-width: 100%;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      color: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.08);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .hero h1 {
+      margin: 16px 0 16px;
+      max-width: 820px;
+      font-size: clamp(42px, 7vw, 84px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .hero .subtitle {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(255,255,255,.84);
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.45;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      font-weight: 820;
+      background: rgba(255,255,255,.12);
+    }
+
+    .button:hover {
+      background: rgba(255,255,255,.20);
+      text-decoration: none;
+    }
+
+    .button.primary {
+      border-color: transparent;
+      color: var(--slate);
+      background: #fff;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.20);
+      color: rgba(255,255,255,.78);
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 480px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)),
+        rgba(255,255,255,.05);
+      box-shadow: 0 28px 80px rgba(0,0,0,.22);
+      overflow: hidden;
+    }
+
+    .visual-grid {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.84), rgba(0,0,0,.18));
+    }
+
+    .audio-object {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      top: 26px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(17, 20, 22, .78);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+
+    .audio-title,
+    .knowledge-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(255,255,255,.86);
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .wave {
+      height: 112px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      overflow: hidden;
+    }
+
+    .wave span {
+      width: 7px;
+      min-width: 5px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #fff, #80efe3 45%, #eeb36a);
+      opacity: .86;
+      transform-origin: center;
+      animation: meter 1.7s ease-in-out infinite alternate;
+    }
+
+    .wave span:nth-child(2n) { animation-duration: 2.25s; opacity: .68; }
+    .wave span:nth-child(3n) { animation-duration: 1.25s; opacity: .92; }
+    .wave span:nth-child(5n) { animation-duration: 2.85s; opacity: .74; }
+
+    @keyframes meter {
+      from { transform: scaleY(.28); }
+      to { transform: scaleY(1); }
+    }
+
+    .knowledge-object {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 26px;
+      padding: 18px;
+      border-radius: 22px;
+      color: #fff;
+      background: rgba(255,255,255,.11);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .knowledge-layers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .layer {
+      position: relative;
+      min-height: 78px;
+      padding: 14px 14px 12px;
+      border-radius: 16px;
+      background: #fff;
+      color: var(--ink);
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0,0,0,.14);
+    }
+
+    .layer strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.15;
+    }
+
+    .layer span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .layer::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--teal);
+    }
+
+    .layer:nth-child(2)::before { background: var(--blue); }
+    .layer:nth-child(3)::before { background: var(--amber); }
+    .layer:nth-child(4)::before { background: var(--rose); }
+
+    .connector {
+      position: absolute;
+      left: 50%;
+      top: 207px;
+      width: 2px;
+      height: 86px;
+      background: linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.85));
+    }
+
+    .connector::before,
+    .connector::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 8px rgba(255,255,255,.11);
+    }
+
+    .connector::before { top: -4px; }
+    .connector::after { bottom: -4px; }
+
+    main {
+      max-width: var(--content);
+      margin: 0 auto;
+      padding: 42px 22px 90px;
+      display: grid;
+      grid-template-columns: 268px minmax(0, 1fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .toc {
+      position: sticky;
+      top: 78px;
+      max-height: calc(100vh - 104px);
+      overflow-y: auto;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,253,250,.82);
+      box-shadow: 0 16px 42px rgba(33,49,58,.08);
+    }
+
+    .toc h2 {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .toc a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 12px;
+      color: #303833;
+      font-size: 14px;
+      font-weight: 720;
+      line-height: 1.35;
+    }
+
+    .toc a.sub {
+      padding-left: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 680;
+    }
+
+    .toc a:hover,
+    .toc a.active {
+      color: var(--teal);
+      background: rgba(14,143,126,.09);
+      text-decoration: none;
+    }
+
+    .article {
+      min-width: 0;
+    }
+
+    .chapter {
+      scroll-margin-top: 86px;
+      padding: 46px 0 54px;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .chapter h2 {
+      max-width: 840px;
+      margin: 0 0 16px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .chapter h3 {
+      scroll-margin-top: 88px;
+      max-width: 820px;
+      margin: 38px 0 12px;
+      font-size: clamp(23px, 2.5vw, 31px);
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .chapter h4 {
+      max-width: var(--measure);
+      margin: 26px 0 8px;
+      font-size: 18px;
+      line-height: 1.32;
+    }
+
+    .chapter h5 {
+      max-width: var(--measure);
+      margin: 20px 0 7px;
+      color: var(--slate);
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .chapter p,
+    .chapter ul,
+    .chapter ol,
+    .chapter blockquote {
+      max-width: var(--measure);
+    }
+
+    .lead {
+      color: #333b35;
+      font-size: clamp(18px, 1.8vw, 21px);
+      line-height: 1.62;
+    }
+
+    .abstract-box,
+    .thesis,
+    .callout,
+    .note,
+    .example {
+      max-width: 860px;
+      border-radius: var(--radius);
+    }
+
+    .abstract-box {
+      padding: 24px;
+      border: 1px solid rgba(14,143,126,.20);
+      background: linear-gradient(135deg, rgba(229,245,241,.95), rgba(231,238,251,.78));
+    }
+
+    .thesis {
+      margin: 24px 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(45,94,168,.24);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      color: var(--slate);
+      font-size: 19px;
+      font-weight: 840;
+      line-height: 1.48;
+    }
+
+    .callout {
+      margin: 24px 0;
+      padding: 20px 22px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--slate), #0e4d46);
+      box-shadow: 0 18px 45px rgba(33,49,58,.18);
+    }
+
+    .callout strong { color: #aef1e7; }
+
+    .note {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border-left: 5px solid var(--teal);
+      background: rgba(229,245,241,.86);
+    }
+
+    .example {
+      margin: 24px 0;
+      padding: 20px 22px;
+      border: 1px solid rgba(191,83,107,.20);
+      background: var(--soft-rose);
+    }
+
+    .example p {
+      margin: 0 0 12px;
+    }
+
+    .example p:last-child { margin-bottom: 0; }
+
+    .cite {
+      color: var(--blue);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .stats {
+      max-width: 980px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .stat,
+    .mini-card,
+    .figure,
+    .chart-card,
+    .table-wrap,
+    .search-card,
+    .risk-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 14px 38px rgba(33,49,58,.08);
+    }
+
+    .stat {
+      min-height: 160px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .stat .num {
+      color: var(--teal);
+      font-size: clamp(31px, 4vw, 46px);
+      font-weight: 900;
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .stat:nth-child(2) .num { color: var(--blue); }
+    .stat:nth-child(3) .num { color: var(--amber); }
+    .stat:nth-child(4) .num { color: var(--rose); }
+
+    .stat .label {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 720;
+      line-height: 1.42;
+    }
+
+    .figure,
+    .chart-card {
+      max-width: 980px;
+      margin: 28px 0;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .figure-title,
+    .chart-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .figure-title h4,
+    .chart-title h4 {
+      margin: 0;
+      color: var(--slate);
+      font-size: 17px;
+    }
+
+    .figure-title p,
+    .chart-title p {
+      margin: 0;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .chart {
+      width: 100%;
+      height: 360px;
+      border-radius: 12px;
+    }
+
+    .chart.compact { height: 300px; }
+
+    .chart-fallback {
+      display: grid;
+      place-items: center;
+      min-height: 240px;
+      padding: 18px;
+      color: var(--muted);
+      background: #faf7f0;
+      border: 1px dashed var(--line);
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pipe-step {
+      position: relative;
+      min-height: 118px;
+      padding: 16px 12px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fff, #faf7f0);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      font-weight: 880;
+      line-height: 1.22;
+    }
+
+    .pipe-step span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .pipe-step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translate(50%, -50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--teal);
+      font-size: 13px;
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+      z-index: 2;
+    }
+
+    .governance-strip {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--slate), var(--blue), var(--teal));
+      font-size: 13px;
+      font-weight: 820;
+      text-align: center;
+    }
+
+    .bottlenecks {
+      max-width: 980px;
+      margin: 24px 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mini-card {
+      padding: 18px;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--slate);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .mini-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .search-mockup {
+      display: grid;
+      grid-template-columns: 1fr;
+      max-width: 560px;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .search-panel {
+      padding: 16px;
+      border-radius: 14px;
+      background: #f9f5ed;
+      border: 1px solid var(--line);
+    }
+
+    .search-input {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .search-input span:last-child {
+      color: #fff;
+      background: var(--teal);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .search-card {
+      padding: 15px;
+      box-shadow: none;
+      margin-top: 12px;
+    }
+
+    .search-card .meta {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .search-card p {
+      margin: 7px 0 10px;
+      color: #303833;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .play {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: fit-content;
+      margin: 0 auto;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--slate);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .rag-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .rag-step {
+      min-height: 132px;
+      padding: 16px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .rag-step strong {
+      display: block;
+      color: var(--slate);
+      line-height: 1.25;
+    }
+
+    .rag-step span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .risk-grid {
+      max-width: 980px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .risk-card {
+      padding: 18px;
+      min-height: 192px;
+    }
+
+    .risk-card .badge {
+      display: inline-flex;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--slate);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .risk-card:nth-child(2) .badge { background: var(--blue); }
+    .risk-card:nth-child(3) .badge { background: var(--rose); }
+
+    .risk-card h4 {
+      margin: 14px 0 8px;
+    }
+
+    .risk-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    blockquote {
+      margin: 22px 0;
+      padding: 18px 20px;
+      border-left: 5px solid var(--amber);
+      background: var(--soft-amber);
+      border-radius: 13px;
+      color: #342d24;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: #f0eadf;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: .92em;
+    }
+
+    .table-wrap {
+      max-width: 980px;
+      overflow-x: auto;
+      margin: 24px 0;
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    th {
+      color: #fff;
+      background: var(--slate);
+      font-size: 12px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .loop {
+      position: relative;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .loop-core {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 22px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--slate), var(--teal));
+      box-shadow: 0 24px 60px rgba(33,49,58,.22);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .loop-node {
+      position: absolute;
+      width: min(230px, 38%);
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 32px rgba(33,49,58,.08);
+      font-size: 13px;
+      font-weight: 760;
+      line-height: 1.35;
+    }
+
+    .loop-node strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--blue);
+      font-size: 14px;
+    }
+
+    .loop-node.one { top: 16px; left: 50%; transform: translateX(-50%); }
+    .loop-node.two { top: 39%; right: 14px; }
+    .loop-node.three { bottom: 16px; left: 50%; transform: translateX(-50%); }
+    .loop-node.four { top: 39%; left: 14px; }
+
+    .refs ol {
+      max-width: 940px;
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .refs li {
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+      color: #29312c;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .footer {
+      max-width: var(--content);
+      margin: 0 auto;
+      padding: 24px 22px 54px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .backtop {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 850;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--slate);
+      box-shadow: 0 14px 34px rgba(33,49,58,.24);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .backtop.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 56px;
+      }
+
+      .hero-visual { min-height: 500px; }
+
+      main {
+        grid-template-columns: 1fr;
+        padding-top: 26px;
+      }
+
+      .toc {
+        position: relative;
+        top: 0;
+      }
+
+      .toc div {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .stats,
+      .bottlenecks,
+      .risk-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pipeline,
+      .rag-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pipe-step:not(:last-child)::after { display: none; }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .navlinks {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .hero-inner {
+        padding: 42px 18px 56px;
+      }
+
+      .hero-visual {
+        min-height: 540px;
+        border-radius: 20px;
+      }
+
+      .knowledge-layers,
+      .search-mockup,
+      .stats,
+      .bottlenecks,
+      .risk-grid,
+      .pipeline,
+      .rag-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .toc div {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      main {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .chapter {
+        scroll-margin-top: 164px;
+        padding: 38px 0 44px;
+      }
+
+      .chapter h3 {
+        scroll-margin-top: 164px;
+      }
+
+      .figure,
+      .chart-card {
+        padding: 14px;
+      }
+
+      .figure-title,
+      .chart-title {
+        display: block;
+      }
+
+      .figure-title p,
+      .chart-title p {
+        margin-top: 6px;
+      }
+
+      .chart {
+        height: 310px;
+      }
+
+      .loop {
+        min-height: auto;
+        display: block;
+        padding: 0;
+      }
+
+      .loop-core {
+        width: 100%;
+        height: auto;
+        min-height: 120px;
+        border-radius: 16px;
+      }
+
+      .loop-node {
+        position: static;
+        width: 100%;
+        transform: none !important;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .toc div {
+        grid-template-columns: 1fr;
+      }
+
+      .navlinks a {
+        padding: 7px 8px;
+        font-size: 13px;
+      }
+
+      .hero h1 {
+        font-size: clamp(36px, 12vw, 48px);
+      }
+
+      .audio-object,
+      .knowledge-object {
+        left: 14px;
+        right: 14px;
+      }
+
+      .wave span {
+        width: 5px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .wave span { animation: none; }
+      * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .topbar,
+      .progress,
+      .backtop { display: none !important; }
+      main { display: block; }
+      .toc { display: none; }
+      .chapter { break-inside: avoid; }
+      a { color: #000; }
+      .figure,
+      .chart-card,
+      .table-wrap,
+      .stat,
+      .mini-card,
+      .risk-card { box-shadow: none; }
     }
   </style>
 </head>
 <body>
-  <div class="progress" id="progress"></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
   <nav class="topbar" aria-label="Primary navigation">
     <div class="nav">
-      <div class="brand"><span class="dot"></span><span>AI × Podcasting</span></div>
+      <a class="brand" href="#top" aria-label="Back to top">
+        <span class="brand-mark">AI</span>
+        <span>AI and Podcast Knowledge</span>
+      </a>
       <div class="navlinks">
         <a href="#domain">Domain</a>
         <a href="#technology">Technology</a>
         <a href="#ethics">Ethics</a>
-        <a href="#governance">Governance</a>
+        <a href="#conclusion">Conclusion</a>
         <a href="#references">References</a>
       </div>
     </div>
   </nav>
 
   <header class="hero" id="top">
-    <div>
-      <div class="eyebrow">Student Number: 24200136 · Online Blog Version</div>
-      <h1>From Audio Black Boxes to Searchable Knowledge</h1>
-      <p class="subtitle">How AI can transform podcasting from long, opaque audio into searchable, accessible and accountable knowledge infrastructure.</p>
-      <div class="hero-meta">
-        <span class="pill">Speech Recognition</span>
-        <span class="pill">Semantic Search</span>
-        <span class="pill">RAG Summaries</span>
-        <span class="pill">Recommendation Fairness</span>
-        <span class="pill">Creator Rights</span>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow">Online blog version | Student Number: 24200136</div>
+        <h1>Unlocking the Audio Black Box</h1>
+        <p class="subtitle">How AI turns podcasts into searchable knowledge, and who benefits when machines become the interface to long-form conversation.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#abstract">Read the report</a>
+          <a class="button" href="#pipeline">See the AI pipeline</a>
+        </div>
+        <div class="hero-tags" aria-label="Key topics">
+          <span class="tag">Automatic speech recognition</span>
+          <span class="tag">Speaker diarization</span>
+          <span class="tag">Semantic search</span>
+          <span class="tag">Grounded summarisation</span>
+          <span class="tag">Fairness and ownership</span>
+        </div>
       </div>
-    </div>
-    <div class="hero-card" aria-label="Visual metaphor showing audio black box transformed into structured knowledge">
-      <div class="blackbox">
-        <div class="audio-box">
-          <strong>Before AI: one long audio file</strong>
-          <div class="audio-line" aria-hidden="true">
-            <span class="bar" style="height:62%"></span><span class="bar" style="height:28%"></span><span class="bar" style="height:84%"></span><span class="bar" style="height:52%"></span><span class="bar" style="height:70%"></span><span class="bar" style="height:36%"></span><span class="bar" style="height:90%"></span><span class="bar" style="height:44%"></span><span class="bar" style="height:76%"></span><span class="bar" style="height:31%"></span><span class="bar" style="height:68%"></span><span class="bar" style="height:58%"></span><span class="bar" style="height:92%"></span><span class="bar" style="height:40%"></span><span class="bar" style="height:82%"></span><span class="bar" style="height:48%"></span><span class="bar" style="height:74%"></span><span class="bar" style="height:34%"></span><span class="bar" style="height:88%"></span><span class="bar" style="height:56%"></span><span class="bar" style="height:66%"></span><span class="bar" style="height:43%"></span><span class="bar" style="height:79%"></span><span class="bar" style="height:50%"></span><span class="bar" style="height:71%"></span><span class="bar" style="height:37%"></span><span class="bar" style="height:86%"></span><span class="bar" style="height:45%"></span><span class="bar" style="height:69%"></span><span class="bar" style="height:59%"></span>
+
+      <div class="hero-visual" aria-label="Animated visual showing audio becoming structured knowledge">
+        <div class="visual-grid" aria-hidden="true"></div>
+        <div class="audio-object">
+          <div class="audio-title">
+            <span>Before AI: one long audio object</span>
+            <span>03:00:00</span>
+          </div>
+          <div class="wave" aria-hidden="true">
+            <span style="height:62%"></span><span style="height:28%"></span><span style="height:84%"></span><span style="height:52%"></span><span style="height:70%"></span><span style="height:36%"></span><span style="height:90%"></span><span style="height:44%"></span><span style="height:76%"></span><span style="height:31%"></span><span style="height:68%"></span><span style="height:58%"></span><span style="height:92%"></span><span style="height:40%"></span><span style="height:82%"></span><span style="height:48%"></span><span style="height:74%"></span><span style="height:34%"></span><span style="height:88%"></span><span style="height:56%"></span><span style="height:66%"></span><span style="height:43%"></span><span style="height:79%"></span><span style="height:50%"></span><span style="height:71%"></span><span style="height:37%"></span><span style="height:86%"></span><span style="height:45%"></span><span style="height:69%"></span><span style="height:59%"></span>
           </div>
         </div>
-        <div class="knowledge-box">
-          <strong>After AI: structured knowledge layers</strong>
-          <div class="knowledge-grid">
-            <div class="mini">Transcript</div>
-            <div class="mini">Speaker labels</div>
-            <div class="mini">Searchable chunks</div>
-            <div class="mini">Cited summaries</div>
+        <div class="connector" aria-hidden="true"></div>
+        <div class="knowledge-object">
+          <div class="knowledge-title">
+            <span>After AI: searchable knowledge layers</span>
+            <span>linked evidence</span>
+          </div>
+          <div class="knowledge-layers">
+            <div class="layer"><strong>Transcript</strong><span>speech becomes readable and searchable</span></div>
+            <div class="layer"><strong>Speaker labels</strong><span>claims can be attributed to hosts and guests</span></div>
+            <div class="layer"><strong>Semantic chunks</strong><span>long episodes become navigable topics</span></div>
+            <div class="layer"><strong>Cited answers</strong><span>summaries point back to timestamps</span></div>
           </div>
         </div>
       </div>
@@ -213,538 +1295,615 @@
   </header>
 
   <main>
-    <div class="layout">
-      <aside class="toc">
-        <h3>Contents</h3>
+    <aside class="toc" aria-label="Table of contents">
+      <h2>Contents</h2>
+      <div>
         <a href="#abstract">Abstract</a>
-        <a href="#domain">1. Domain and challenges</a>
-        <a href="#technology">2. AI technologies</a>
-        <a href="#ethics">3. Ethical implications</a>
-        <a href="#governance">4. Governance</a>
+        <a href="#introduction">1. Introduction</a>
+        <a class="sub" href="#opening-story">1.1 Opening story</a>
+        <a class="sub" href="#central-problem">1.2 Audio black boxes</a>
+        <a class="sub" href="#pipeline">1.3 AI transformation</a>
+        <a class="sub" href="#ethical-tension">1.4 Ethical tension</a>
+        <a class="sub" href="#roadmap">1.5 Roadmap</a>
+        <a href="#domain">2. Domain and challenges</a>
+        <a class="sub" href="#podcasting-mainstream">2.1 Mainstream medium</a>
+        <a class="sub" href="#bottlenecks">2.2 Three bottlenecks</a>
+        <a class="sub" href="#case-ai-adoption">2.3 Case for AI adoption</a>
+        <a href="#technology">3. AI technologies</a>
+        <a class="sub" href="#transcription">3.1 Transcription</a>
+        <a class="sub" href="#semantic-search">3.2 Semantic search</a>
+        <a class="sub" href="#grounded-summarisation">3.3 Grounded summarisation</a>
+        <a href="#ethics">4. Ethical implications</a>
+        <a class="sub" href="#accuracy-trust">4.1 Accuracy and trust</a>
+        <a class="sub" href="#fairness-visibility">4.2 Fairness and visibility</a>
+        <a class="sub" href="#ownership-value">4.3 Ownership and value</a>
+        <a class="sub" href="#ethics-mapping">4.4 Risk mapping</a>
         <a href="#conclusion">5. Conclusion</a>
+        <a class="sub" href="#summary-ai-transformation">5.1 AI transformation</a>
+        <a class="sub" href="#crucial-choice">5.2 Crucial choice</a>
         <a href="#references">References</a>
-      </aside>
+      </div>
+    </aside>
 
-      <article>
-        <section class="card" id="abstract">
-          <h2>Abstract</h2>
-          <p class="lead">Podcasting has become a major medium for journalism, education, business analysis, technology discussion and cultural commentary. Its strength lies in long-form conversation: podcasts preserve tone, hesitation, disagreement and context. Yet this strength is also the source of its central weakness. Podcast knowledge is usually trapped inside long audio files. Users cannot easily search, skim, cite, translate or navigate a three-hour conversation, and platforms struggle to understand what is inside an episode when metadata consists mainly of titles, descriptions, categories and listening histories.</p>
-          <div class="thesis">This blog argues that the most important impact of AI on podcasting is not merely production automation. It is knowledge transformation: AI can turn podcasts from audio objects that can only be played into machine-readable knowledge objects that can be transcribed, segmented, searched, summarised, translated, recommended and cited.</div>
-          <p>The core technical pipeline is: <strong>Audio → Transcript → Speaker labels → Semantic chunks → Search / Summary / Recommendation / Translation</strong>. Automatic speech recognition converts audio into text; speaker diarization identifies who spoke when; semantic chunking divides long conversations into navigable knowledge units; embedding models and vector databases enable meaning-based search; retrieval-augmented generation and large language models produce grounded summaries and question-answering interfaces; recommendation systems use semantic metadata to improve discovery; and AI dubbing and audio enhancement expand accessibility and production quality.</p>
-          <p>However, once AI begins to summarise, recommend, translate and explain podcasts, it also becomes a powerful knowledge intermediary. AI may make podcast knowledge easier to access, but it may also misrepresent nuanced conversations, amplify platform control over discovery, and extract value from creators if users consume AI-generated summaries instead of original episodes. The central principle of responsible podcast AI should therefore be: <strong>AI should unlock podcast knowledge, not extract it.</strong></p>
-        </section>
+    <article class="article">
+      <section class="chapter" id="abstract">
+        <h2>Abstract</h2>
+        <div class="abstract-box">
+          <p class="lead">As podcasting has moved from a niche audio format into a mainstream channel for interviews, journalism, education, expert analysis and cultural discussion, it has created a paradox: podcasts are increasingly rich in knowledge, but still poor in navigability.</p>
+          <p>Users cannot easily search for a specific idea, skim an episode's structure, cite a precise moment or reuse podcast knowledge without listening linearly. This blog argues that AI can unlock this "audio black box" by transforming podcasts from linear audio files into searchable knowledge objects through three steps: transcription makes speech machine-readable and attributable; semantic chunking and vector search make ideas findable; and retrieval-augmented summarisation makes podcast knowledge usable.</p>
+          <p>Yet this transformation creates three ethical risks: AI may misrepresent what was said, shape which creators become visible, and extract value from creators without returning attention or revenue. Responsible podcast AI should therefore be designed as a bridge back to original listening, not as a platform-controlled substitute for it. AI should unlock podcast knowledge, not extract it.</p>
+        </div>
+      </section>
 
-        <section class="card" id="domain">
-          <h2>1. Domain and current challenges</h2>
-          <h3>1.1 Podcasting is now a mainstream knowledge industry</h3>
-          <p>Podcasting is no longer a niche format. Edison Research's <em>Infinite Dial 2026</em> reports that 58% of Americans aged 12 or above consumed a podcast in the past month, and 45% consumed a podcast in the past week <a class="cite" href="#ref-1">(1)</a>. The global podcasting market was estimated at USD 30.72 billion in 2024 and is projected to reach USD 131.13 billion by 2030 <a class="cite" href="#ref-2">(2)</a>. Podcast Industry Insights reports that Podcast Index tracks more than 4.6 million podcasts and more than 162 million episodes <a class="cite" href="#ref-3">(3)</a>.</p>
-          <div class="grid-3">
-            <div class="stat"><div class="num">58%</div><div class="label">Americans aged 12+ who consumed a podcast in the past month, according to Edison Research.</div></div>
-            <div class="stat"><div class="num">$131bn</div><div class="label">Projected global podcasting market size by 2030, according to Grand View Research.</div></div>
-            <div class="stat"><div class="num">162m+</div><div class="label">Episodes tracked by Podcast Index, according to Podcast Industry Insights.</div></div>
+      <section class="chapter" id="introduction">
+        <h2>1. Introduction: Podcast Knowledge Is Trapped in Audio</h2>
+
+        <h3 id="opening-story">1.1 Opening Story: The Student Who Cannot Find the Argument</h3>
+        <p>Think of a moment when you remember an idea from a podcast, but not where it appeared. A student writing an essay may remember that a guest gave exactly the explanation she needs in a podcast, but the episode is almost two hours long. She knows the answer is somewhere in the conversation, yet she has no index, no headings and no way to Ctrl-F the audio. The knowledge is there, but for practical purposes, it is hidden.</p>
+        <p>This is the central weakness of podcasting as a knowledge medium: podcasts are rich in ideas, but poor in navigability. Unlike articles with headings and searchable paragraphs, a podcast episode is often just a progress bar. The listener can move forward or backward, but cannot easily see the intellectual structure of the conversation.</p>
+
+        <h3 id="central-problem">1.2 The Central Problem: Podcasts Are Audio Black Boxes</h3>
+        <p>Podcasts' value lies in long-form conversation: tone, hesitation, disagreement and context can all be preserved in ways that short-form media often lose. Yet this strength is also the source of the problem. A one-hour podcast is usually presented as a single linear audio file. Users cannot easily search inside it, skim its structure, cite a precise moment or reuse its ideas. So the problem is not content scarcity, but retrievability.</p>
+        <p>The black-box problem also affects creators and platforms. Creators may publish valuable conversations, but platforms often see only a title, a short description and a few tags. Students and journalists may want to cite a claim, but they need a reliable timestamp and transcript. The knowledge is present, but it is not machine-readable, searchable or accountable.</p>
+
+        <h3 id="pipeline">1.3 The AI Transformation: From Audio Object to Knowledge Object</h3>
+        <p>AI changes the status of a podcast. It can turn a podcast from a linear audio object into a structured knowledge object. As Figure 1 shows, the basic pipeline is: automatic speech recognition converts speech into a time-aligned transcript; speaker diarization estimates who spoke; semantic chunking divides the transcript into meaningful units; embeddings and vector search make those units findable; and retrieval-augmented generation produces summaries, answers and recommendations grounded in the original audio evidence.</p>
+
+        <div class="figure">
+          <div class="figure-title">
+            <h4>Figure 1. The podcast AI pipeline from audio object to searchable knowledge object</h4>
+            <p><strong>From audio black boxes to searchable podcast knowledge.</strong> AI can transform a podcast from one long, difficult-to-search audio file into structured knowledge layers. The key design principle is that AI should guide users back to original listening rather than extract value from the podcast.</p>
           </div>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Podcasting at scale</h4>
-              <p class="chart-note">Interactive chart using publicly reported figures from Edison Research, Grand View Research and Podcast Industry Insights. Hover over bars and lines for details.</p>
+          <div class="pipeline" aria-label="Podcast AI pipeline">
+            <div class="pipe-step">Raw audio<span>waveform, noise, speakers</span></div>
+            <div class="pipe-step">ASR transcript<span>time-aligned text</span></div>
+            <div class="pipe-step">Speaker labels<span>who spoke when</span></div>
+            <div class="pipe-step">Semantic chunks<span>topics and arguments</span></div>
+            <div class="pipe-step">Vector search<span>meaning retrieval</span></div>
+            <div class="pipe-step">Grounded outputs<span>answers, summaries, recommendations</span></div>
+          </div>
+          <div class="governance-strip">Governance: confidence labels | timestamp evidence | creator controls | fairness audits | revenue attribution</div>
+        </div>
+
+        <p>This transformation matters because it changes what users can do. Instead of remembering the title, guest or exact wording, a user can search for the idea itself. Instead of listening linearly for three hours, a user can jump to the segment where the argument appears. The goal is not to remove listening, but to make listening easier to enter, verify and return to.</p>
+
+        <h3 id="ethical-tension">1.4 The Central Ethical Tension</h3>
+        <p>The key question is not only what AI can do for podcasting, but who benefits when AI controls how podcast knowledge is accessed.</p>
+        <p>If AI produces transcripts, it affects accessibility. If AI generates summaries, it affects meaning. If AI recommends episodes, it affects visibility. If AI turns a podcast library into a conversational question-answering system, it affects monetisation. A podcast AI system may look like a simple convenience feature, but it can become a new gatekeeper between creators and audiences. This blog therefore argues for responsible podcast AI: AI should unlock knowledge without replacing, distorting or exploiting the original act of listening.</p>
+
+        <h3 id="roadmap">1.5 Roadmap of the Blog</h3>
+        <p>The remainder of the blog proceeds in four stages. Section 2 introduces podcasting as a mainstream knowledge medium and explains the access, discovery and governance challenges that make AI adoption attractive. Section 3 explains the technical pipeline that turns audio into searchable knowledge: transcription, semantic search and grounded summarisation. Section 4 examines the ethical implications, focusing on accuracy, fairness and ownership. Section 5 concludes by arguing that the future of podcast AI should be symbiotic rather than parasitic.</p>
+      </section>
+
+      <section class="chapter" id="domain">
+        <h2>2. Domain and Challenges</h2>
+
+        <h3 id="podcasting-mainstream">2.1 Podcasting as a Mainstream Knowledge Medium</h3>
+        <h4>2.1.1 Introduction of Podcast</h4>
+        <p>A podcast is usually understood as an episodic audio programme distributed through podcast apps, streaming platforms, RSS feeds or video platforms. In practice, the definition has widened, as many audiences now also treat video interviews on YouTube or Spotify as podcasts. The format is flexible: it can contain journalism, education, expert interviews, business analysis, comedy, cultural discussion or technical tutorials. This flexibility makes podcasting valuable for knowledge dissemination, because it preserves long-form explanation, voice, tone and interpersonal exchange.</p>
+        <p>For knowledge work, this is both powerful and awkward. The medium fits daily life because it can be consumed while walking, commuting or doing routine work. But it does not fit search very well. A user can absorb a long conversation and later struggle to retrieve the exact argument. The podcast is therefore a mainstream knowledge medium with a serious retrieval problem.</p>
+
+        <h4>2.1.2 The Scale of the Industry</h4>
+        <p>The scale of podcasting shows why this problem matters. Edison Research reported in <em>The Podcast Consumer 2025</em> that 73% of Americans aged 12 or older had ever consumed a podcast, 55% had consumed one in the last month, and 40% had consumed one in the last week. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week <a class="cite" href="#ref-1">[1]</a>. Globally, DataReportal reported that 22.1% of online adults listened to at least one podcast each week in 2025 <a class="cite" href="#ref-2">[2]</a>. YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem <a class="cite" href="#ref-3">[3]</a>. These figures matter because they show that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium.</p>
+        <p>The commercial market has grown as well. According to the IAB/PwC <em>Internet Advertising Revenue Report: Full Year 2025</em>, U.S. podcast advertising revenue reached $2.9 billion in 2025 <a class="cite" href="#ref-4">[4]</a>. These numbers are measured differently across audio podcasts, video podcasts and streaming talk shows, but they point in the same direction: podcasting is no longer a niche format. It is a large media and knowledge industry.</p>
+
+        <div class="stats" aria-label="Podcast scale statistics">
+          <div class="stat"><div class="num">73%</div><div class="label">Americans aged 12+ who had ever consumed a podcast.</div></div>
+          <div class="stat"><div class="num">773m</div><div class="label">Podcast listening hours per week among Americans aged 13+.</div></div>
+          <div class="stat"><div class="num">1bn+</div><div class="label">Monthly active viewers of podcast content on YouTube.</div></div>
+          <div class="stat"><div class="num">$2.9bn</div><div class="label">U.S. podcast advertising revenue in 2025.</div></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">
+            <h4>Figure 2. Podcasting is now a mainstream knowledge medium</h4>
+            <p>Interactive chart using the adoption figures discussed in the report. Hover to inspect each signal.</p>
+          </div>
+          <div id="chart-scale" class="chart"></div>
+        </div>
+
+        <h3 id="bottlenecks">2.2 Three Bottlenecks in Podcast Knowledge Access</h3>
+        <p>Podcasting is changing from a casual audio format into a searchable and platform-mediated knowledge environment. This change creates three main bottlenecks:</p>
+
+        <div class="bottlenecks" aria-label="Three bottlenecks">
+          <div class="mini-card">
+            <strong>Access challenge</strong>
+            <p>Users cannot easily search, skim or cite specific ideas inside long episodes.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Discovery challenge</strong>
+            <p>Creators with valuable knowledge may remain invisible because metadata is too thin.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Governance challenge</strong>
+            <p>Platforms struggle to moderate or recommend long audio at the relevant segment level.</p>
+          </div>
+        </div>
+
+        <h4>2.2.1 Access Challenge: Users Cannot Search, Skim or Cite Podcasts</h4>
+        <p>For users, the problem is not that podcasts are uninformative; it is that their information is difficult to access without listening linearly. There are specifically three points:</p>
+        <h5>2.2.1.1 Searchability Problem</h5>
+        <p>Users cannot easily search and locate ideas inside long episodes. If a listener wants a five-minute discussion of climate policy inside a three-hour interview, the title and description may not help.</p>
+        <p>This is a semantic problem, not only a text problem. The speaker may also use different words from the user's query. A search for "carbon tax" may miss a segment where the guest says "set a price for emissions". Even if a transcript exists, the transcript may still be too long. Good podcast search should retrieve ideas, arguments and moments, not only whole episodes.</p>
+        <h5>2.2.1.2 Skimming Problem</h5>
+        <p>Users also cannot quickly judge whether an episode is worth listening to. Podcasts usually only have titles and progress bars, which makes the cost of evaluation high. A student may need only one valuable argument, but must invest a large amount of time before knowing whether the episode contains it.</p>
+        <h5>2.2.1.3 Citation Problem</h5>
+        <p>Students, journalists and researchers need precise references. A written source can be cited by page, paragraph or section. A podcast needs an episode title, date, speaker and timestamp. Without a reliable transcript and timestamp, it is difficult to quote accurately or verify context.</p>
+
+        <h4>2.2.2 Discovery Challenge: Creators Are Hard to Find Without Rich Metadata</h4>
+        <p>Without richer semantic metadata, creators with valuable knowledge may remain invisible simply because platforms cannot understand what their episodes contain with the reasons:</p>
+        <h5>2.2.2.1 Metadata Is Too Thin</h5>
+        <p>Titles and descriptions cannot represent a two-hour conversation. A podcast episode may begin with a personal story, move into economic policy, discuss public health, and finish with cultural commentary. Thin metadata hurts creators because it hides their real value. Spotify research has studied the use of semantic information to recommend underserved podcasts and reduce rich-get-richer effects in discovery <a class="cite" href="#ref-5">[5]</a>. This shows that semantic metadata is not just a technical convenience; it can affect whose voices become visible.</p>
+        <h5>2.2.2.2 Cold-Start Problem</h5>
+        <p>New creators lack listening history and platform signals. Popular creators already have downloads, ratings, shares and user behaviour data. New creators often do not. If platforms depend heavily on popularity signals, they may repeatedly recommend already successful shows. Semantic understanding can partly address this problem by recommending content because of what it contains, not only because the creator is already famous.</p>
+
+        <h4>2.2.3 Governance Challenge: Platforms Cannot Easily Moderate or Recommend</h4>
+        <h5>2.2.3.1 Moderation Problem</h5>
+        <p>Harmful claims may appear in specific minutes. A two-hour podcast can be mostly harmless but contain one defamatory statement, one health misinformation claim, one copyrighted music clip or one hateful remark. Episode-level moderation is too blunt so it may miss harmful segments. Long audio is therefore a potential blind spot for platform governance.</p>
+        <h5>2.2.3.2 Recommendation Problem</h5>
+        <p>Episode-level recommendation is less precise than segment-level relevance. A user may not want the whole episode; they may want the ten-minute part that matches their interest. Segment-level recommendation can connect users to relevant moments across different episodes, but it also gives platforms more power to decide which segments count as relevant.</p>
+
+        <h3 id="case-ai-adoption">2.3 The Case for AI Adoption</h3>
+        <p>Manual tagging cannot scale to modern podcasting. Human transcription is useful, but expensive and time-consuming. Manual chapter writing is valuable, but many independent creators do not have the resources to do it. As podcast libraries grow, the only practical way to convert raw, unstructured audio into searchable knowledge is to use AI and machine learning.</p>
+        <p>This shift is already visible in mainstream products. Apple introduced transcripts for Apple Podcasts with iOS 17.4, making podcast audio readable and searchable across many countries and regions <a class="cite" href="#ref-6">[6]</a>. Spotify now supports transcript management, automatic episode chapters and natural-language podcast discovery features <a class="cite" href="#ref-7">[7]</a> <a class="cite" href="#ref-8">[8]</a> <a class="cite" href="#ref-9">[9]</a>. These examples show that AI transcription and semantic navigation are becoming ordinary podcast infrastructure rather than experimental add-ons.</p>
+        <p>The case for AI adoption is therefore strong. AI can decode speech into text, structure long conversations, support semantic search, improve accessibility, generate summaries and make creators easier to discover. But the case for adoption is not the same as the case for unrestricted deployment. AI solves the audio black-box problem only if it is designed to preserve accuracy, fairness and creator value.</p>
+      </section>
+
+      <section class="chapter" id="technology">
+        <h2>3. AI Technologies Application: Three Steps from Audio to Searchable Knowledge</h2>
+        <p class="lead">The most important AI transformation in podcasting can be understood through three technical functions: AI decodes speech into text, structures long transcripts into searchable knowledge units, and mediates access through summaries, question-answering and recommendations.</p>
+
+        <div class="chart-card">
+          <div class="chart-title">
+            <h4>Figure 3. Technical pipeline as a knowledge flow</h4>
+            <p>The Sankey diagram shows how one audio file branches into transcript evidence, search, summaries and recommendations.</p>
+          </div>
+          <div id="chart-pipeline" class="chart"></div>
+        </div>
+
+        <h3 id="transcription">3.1 Transcription: Making Podcast Audio Machine-Readable</h3>
+        <p>Before a podcast can be searched, summarised or cited, the speech must be converted into machine-readable text. Podcast audio is difficult because episodes may contain background noise, laughter, interruptions, music, accents, informal language, specialist terms and multiple speakers.</p>
+
+        <h4>3.1.1 Automatic Speech Recognition: From Waveform to Transcript</h4>
+        <p>Automatic Speech Recognition, or ASR, converts acoustic signals into text. A modern ASR pipeline usually begins with an audio waveform, extracts acoustic representations and uses a neural model to predict text tokens. Older systems often separated acoustic modelling, pronunciation modelling and language modelling. Modern systems increasingly use end-to-end neural architectures, including Transformer-based sequence-to-sequence models.</p>
+        <p><strong>Whisper</strong> is an important example. The Whisper paper studies speech recognition systems trained on large amounts of weakly supervised multilingual audio from the web, and the model is widely used because it is robust across tasks and languages <a class="cite" href="#ref-10">[10]</a>. For podcasts, this robustness matters because episodes often contain casual speech, domain-specific vocabulary and varied recording conditions.</p>
+        <p><strong>wav2vec 2.0</strong> is another influential approach. It learns speech representations from raw audio through self-supervised learning and can then be fine-tuned for speech recognition with less labelled data <a class="cite" href="#ref-11">[11]</a>. This is important for podcasting because podcast content includes many languages, accents, informal speech styles and specialist domains where large labelled datasets may not exist. Self-supervised speech models therefore help make transcription more scalable across diverse podcast libraries.</p>
+        <p>These research advances also explain why transcription is moving from a specialist post-production service to a platform-level capability. Systems such as Whisper and wav2vec 2.0 demonstrate the technical feasibility of robust automatic transcription, while commercial speech-to-text services, including OpenAI's newer models, show how this capability can now be integrated into podcast platforms, search tools and creator workflows <a class="cite" href="#ref-12">[12]</a>.</p>
+
+        <h4>3.1.2 Speaker Diarization: Who Spoke When?</h4>
+        <p>Speaker diarization answers the question: who spoke when? In a podcast conversation, meaning depends on speaker attribution. A claim made by the guest is different from a challenge made by the host. A joke may be understandable only because of who said it and how another speaker responded.</p>
+        <p>A typical diarization system detects speech activity, segments the audio, extracts speaker embeddings and clusters segments that appear to belong to the same speaker. <strong>pyannote.audio</strong> is a widely used open-source toolkit for speaker diarization, including speaker segmentation, neural speaker embedding and clustering <a class="cite" href="#ref-13">[13]</a>. Diarization is technically important because a correct sentence assigned to the wrong speaker is still a serious error.</p>
+        <p>So, for podcast AI, the output of transcription should therefore be structured data, not just text:</p>
+        <blockquote><code>episode_id</code>, <code>segment_id</code>, <code>speaker_id</code>, <code>start_time</code>, <code>end_time</code>, <code>transcript_text</code>, <code>confidence</code></blockquote>
+        <p>This structure becomes the foundation for all later stages: search, summarisation, recommendation, citation and moderation. Apple researchers have argued that simple word error rate is not enough to evaluate transcript quality, because some errors matter more than others for readability and accessibility <a class="cite" href="#ref-14">[14]</a>. For podcast knowledge, misrecognising a filler word is minor; misrecognising a person's name, a medical term or a policy condition may change the meaning of the whole passage.</p>
+
+        <h3 id="semantic-search">3.2 Semantic Search: Making Podcast Knowledge Findable</h3>
+        <p>Structuring makes podcast knowledge navigable. Users no longer need to know the title, guest or exact wording, because they can search for the idea itself.</p>
+
+        <h4>3.2.1 Semantic Chunking: The Length Problem after Transcription</h4>
+        <p>The length problem does not disappear after transcription. A two-hour podcast transcript may still be tens of thousands of words long. A user cannot reasonably read the entire transcript just to find one argument. The transcript must be divided into meaningful units.</p>
+        <p>Semantic chunking means splitting the transcript into coherent segments: a question and answer, a topic shift, an explanation, an argument, a story or a chapter. Podcast conversations are spontaneous. Speakers interrupt each other, return to earlier points and move gradually between topics. A useful chunk should preserve enough context for meaning while remaining short enough to retrieve and cite.</p>
+        <p>Recent work on podcast chapterisation addresses this problem directly. <strong>PODTILE</strong> divides long podcast transcripts into semantically coherent chapters with titles and timestamps, noting that podcast transcripts are often lengthy and less structured than written text <a class="cite" href="#ref-15">[15]</a>. This is exactly the skimming problem in technical form: the user needs a map of the conversation.</p>
+
+        <h4>3.2.2 Embeddings and Vector Search: Searching Meaning Rather than Exact Words</h4>
+        <p>The core of semantic search is searching meaning rather than exact words. When a user searches for "carbon tax", the guest might say "set a price for emissions". Traditional keyword search may not find this segment, but embedding-based retrieval can.</p>
+        <p>An embedding is a numerical representation of meaning. A model converts a text segment into a vector in a high-dimensional space. Semantically similar segments are placed near each other. <strong>Sentence-BERT</strong> is an important early model for producing semantically meaningful sentence embeddings <a class="cite" href="#ref-16">[16]</a>. More recent benchmarks such as MTEB evaluate embedding models across many retrieval and classification tasks <a class="cite" href="#ref-17">[17]</a>. Spotify's engineering work on natural language search describes the same principle: semantic search matches a query and document that are meaningfully related, even without exact word overlap <a class="cite" href="#ref-18">[18]</a>.</p>
+        <p>At scale, vector search requires efficient indexing. Systems such as <strong>FAISS</strong> and <strong>Milvus</strong> support large-scale nearest-neighbour retrieval and vector data management, which are necessary for searching across large podcast libraries <a class="cite" href="#ref-19">[19]</a> <a class="cite" href="#ref-20">[20]</a>. Figure 4 shows how this could appear to a user. The important design point is that search should return a timestamped segment, speaker label, transcript snippet and play button, not only an AI-generated answer.</p>
+
+        <div class="figure">
+          <div class="figure-title">
+            <h4>Figure 4. Segment-level semantic search interface for podcast knowledge</h4>
+          </div>
+          <div class="search-mockup">
+            <div class="search-panel">
+              <div class="search-input">
+                <span>why are carbon taxes politically difficult?</span>
+                <span>Search</span>
+              </div>
+              <div class="search-card">
+                <div class="meta">Guest A | 01:14:22-01:17:05 | Policy episode</div>
+                <p>The guest discusses pricing emissions, redistribution to households and protecting low-income groups.</p>
+                <span class="play">Play from 01:14:22</span>
+              </div>
+              <div class="search-card">
+                <div class="meta">Host challenge | 01:17:06-01:18:12</div>
+                <p>The host asks whether visible fuel prices make carbon policy unpopular even when rebates exist.</p>
+                <span class="play">Play from 01:17:06</span>
+              </div>
             </div>
-            <div id="chart-audience" class="chart"></div>
           </div>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Projected podcasting market growth</h4>
-              <p class="chart-note">Market projection from USD 30.72bn in 2024 to USD 131.13bn in 2030. Intermediate values are visual interpolation based on the reported forecast.</p>
-            </div>
-            <div id="chart-market" class="chart"></div>
+        </div>
+
+        <p>Additionally, the same transcript-and-chunk pipeline can also support segment-level moderation. Instead of judging a two-hour episode as a whole, platforms can classify timestamped segments for policy-relevant categories such as hate speech, health misinformation or copyright-sensitive audio. This addresses one of the governance challenges introduced earlier: harmful or policy-sensitive content may appear only in specific minutes of a long episode.</p>
+
+        <h3 id="grounded-summarisation">3.3 Grounded Summarisation: Making Podcast Knowledge Usable</h3>
+        <p>While search helps users find relevant segments, summarisation helps users understand what those segments mean. But podcast summarisation must be grounded, because a fluent summary can easily distort a complex conversation.</p>
+
+        <h4>3.3.1 Retrieval-Augmented Generation</h4>
+        <p>Retrieval-Augmented Generation, or RAG, combines a generative language model with retrieved external evidence. In the original RAG formulation, a model retrieves relevant passages from a dense vector index and then generates an answer conditioned on those passages <a class="cite" href="#ref-21">[21]</a>. For podcasts, the external evidence is the timestamped transcript of the original audio.</p>
+        <p>A podcast RAG system works in four steps. First, the user's question is embedded. Second, the system retrieves relevant transcript chunks. Third, the language model generates an answer using those chunks. Fourth, the answer cites the episode, speaker and timestamp that support it. This structure is important because large language models can hallucinate: they may generate fluent text that is unsupported or inaccurate <a class="cite" href="#ref-22">[22]</a>. RAG does not eliminate hallucination; it makes hallucination easier to detect because important claims can be checked against retrieved transcript evidence.</p>
+
+        <div class="figure">
+          <div class="figure-title">
+            <h4>Figure 5. Why podcast RAG should cite audio evidence</h4>
+            <p>Grounding changes a summary from a standalone claim into a navigational layer back to the original conversation.</p>
           </div>
-
-          <h3>1.2 The user problem: podcasts are hard to search, skim and cite</h3>
-          <p>Imagine a student preparing an essay on climate policy. She remembers that a podcast guest once explained carbon taxes in a three-hour interview. If the source were a book or webpage, she could search keywords, scan headings, or jump to a cited paragraph. With a podcast, she must scrub through a long audio file and guess where the relevant discussion occurred.</p>
-          <p>This shows the core problem of podcasts as a knowledge medium. Podcasts do not lack knowledge; they contain interviews, explanations, debates and expert arguments. The problem is that this knowledge is locked inside audio. A two-hour episode is often presented as a single linear progress bar. Users cannot easily search inside it, skim it before listening, or cite a claim with the precision expected in academic or professional work.</p>
-          <p>Major platforms are beginning to address this. Apple introduced transcripts for Apple Podcasts so users can read an episode's full text, search for words or phrases, and tap text to play the corresponding moment <a class="cite" href="#ref-5">(5)</a>. Spotify for Creators has introduced automatic transcripts, chapters, guests and topics, and encourages creators to edit generated labels and timestamps <a class="cite" href="#ref-6">(6)</a>. These platform moves show that transcription and semantic metadata are becoming core podcast infrastructure.</p>
-
-          <h3>1.3 The accessibility problem: without transcripts, some users are excluded</h3>
-          <p>The audio-only nature of podcasts creates accessibility barriers. The World Health Organization reports that more than 430 million people require rehabilitation for disabling hearing loss, and by 2050 more than 700 million people are expected to have disabling hearing loss <a class="cite" href="#ref-7">(7)</a>. For deaf and hard-of-hearing users, an audio-only podcast without a transcript is not merely inconvenient; it may be inaccessible.</p>
-          <p>The W3C Web Accessibility Initiative states that transcripts are required at WCAG Level A for prerecorded audio-only content such as podcasts <a class="cite" href="#ref-8">(8)</a>. Transcripts also help non-native speakers, students, users in noisy environments, and people who prefer reading to listening.</p>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Accessibility is a scale issue</h4>
-              <p class="chart-note">WHO data show the population affected by disabling hearing loss. Transcripts and translations are not decorative extras; they expand access to knowledge.</p>
-            </div>
-            <div id="chart-access" class="chart small"></div>
+          <div class="rag-flow">
+            <div class="rag-step"><strong>1. User question</strong><span>"What did the guest say about carbon taxes?"</span></div>
+            <div class="rag-step"><strong>2. Retrieved evidence</strong><span>Guest A, 01:14:22-01:17:05, transcript snippet and confidence.</span></div>
+            <div class="rag-step"><strong>3. Grounded answer</strong><span>The guest supports carbon taxes conditionally, with redistribution and protection for low-income groups.</span></div>
+            <div class="rag-step"><strong>4. Return to audio</strong><span>Play button, transcript link and creator attribution keep the source visible.</span></div>
           </div>
+        </div>
 
-          <h3>1.4 The creator problem: good content is not always discoverable</h3>
-          <p>Podcast recommendation is weaker than short-video recommendation because platforms receive fewer fine-grained signals. Short-video platforms can observe swipes, replays, comments, likes, shares, captions and visual features. Podcast platforms often know only that a user played an episode, not which five-minute segment created value.</p>
-          <p>This creates a cold-start problem for new creators. A new show may contain excellent analysis, but without listening history, strong metadata or celebrity guests, it may not be recommended. Titles and descriptions are too coarse to represent what is inside an episode. AI-generated transcripts, chapters, keywords and topic labels can turn internal knowledge into signals that recommendation systems can understand.</p>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Transcript metadata remains sparse in the open podcast ecosystem</h4>
-              <p class="chart-note">Podcast Industry Insights reports more than 162 million indexed episodes and more than 5.3 million episodes using Podcasting 2.0 transcript features. The chart uses these figures to illustrate the scale of the metadata gap.</p>
-            </div>
-            <div id="chart-transcript" class="chart small"></div>
+        <p>A responsible podcast Q&amp;A system should not simply answer the user; it should show which transcript segment and timestamp support the answer. The principle should be simple: no timestamp, no trust. The following illustrative example shows why timestamped evidence matters. Suppose a user asks a podcast AI system about a policy discussion:</p>
+        <div class="example">
+          <p><strong>User query:</strong> What did the guest say about carbon taxes?</p>
+          <p><strong>Retrieved evidence:</strong> Episode transcript, Guest A, 01:14:22-01:17:05. The retrieved segment discusses pricing emissions, redistributing revenue to households and protecting low-income groups.</p>
+          <p><strong>Weak AI answer:</strong> The guest supports carbon taxes.</p>
+          <p><strong>Better AI answer:</strong> The guest supports carbon taxes conditionally. They argue that carbon taxes can work if revenue is redistributed to households and if low-income groups are protected.</p>
+          <p><strong>User action:</strong> The interface should provide a "play from 01:14:22" button and a transcript link so that the user can verify the context.</p>
+        </div>
+        <p>The weak answer is not completely false, but it removes the condition that makes the argument meaningful. The better answer preserves nuance, cites the relevant moment and gives the user a path back to the original audio. Recent work such as VoxRAG also explores transcription-free audio retrieval, where systems retrieve relevant audio segments directly from spoken queries <a class="cite" href="#ref-23">[23]</a>. This is promising, but text transcripts remain important for accountability because users and creators need visible evidence.</p>
+
+        <h4>3.3.2 LLM Summarisation and Recommendation</h4>
+        <p>The final layer of the pipeline is LLM-based summarisation and recommendation. This is not simply a matter of sending a whole podcast transcript to a language model and asking for a summary. A more reliable design is a retrieval-grounded pipeline. The system first uses the transcript structure created earlier: speaker labels, timestamps and semantic chunks. Each chunk is converted into an embedding and stored in a vector index or vector database such as FAISS or Milvus <a class="cite" href="#ref-19">[19]</a> <a class="cite" href="#ref-20">[20]</a>. When a user asks a question or requests a summary, the system retrieves the most relevant transcript chunks and passes them to an LLM as evidence.</p>
+        <p>In practice, this kind of system can be built with RAG orchestration frameworks such as LangChain or LlamaIndex. LangChain describes retrieval as a way of fetching relevant external knowledge at query time and using it as the foundation for RAG, while LlamaIndex similarly frames RAG as a process in which data is indexed, relevant context is retrieved, and that context is passed to the LLM with the user's query <a class="cite" href="#ref-24">[24]</a> <a class="cite" href="#ref-25">[25]</a>. For podcasts, the indexed data would be timestamped transcript chunks rather than web pages or PDFs. A simplified pipeline would therefore look like this: transcript chunks are embedded, stored in a vector database, retrieved according to the user's query, and then synthesised by an LLM into a summary, answer or recommendation.</p>
+        <p>This technical design is useful because it supports both summarisation and recommendation. For summarisation, the system can use hierarchical summarisation: short transcript chunks are first summarised with their speaker labels and timestamps, then combined into chapter-level or episode-level summaries. For recommendation, the same embeddings can represent the meaning of podcast segments. Instead of recommending only whole shows based on popularity, the platform can compare a user's query or listening history with segment embeddings and ask: "which segment explains the idea this user is looking for?" This could benefit small or niche creators, because their content may be surfaced through meaning rather than existing audience size <a class="cite" href="#ref-5">[5]</a> <a class="cite" href="#ref-18">[18]</a>.</p>
+      </section>
+
+      <section class="chapter" id="ethics">
+        <h2>4. Ethical Implications and Responsible Design: Who Controls AI-Mediated Podcast Knowledge?</h2>
+
+        <div class="risk-grid">
+          <div class="risk-card">
+            <span class="badge">Accuracy</span>
+            <h4>Can AI represent what was said?</h4>
+            <p>Transcription, speaker attribution, retrieval and summarisation errors can all distort the original conversation.</p>
           </div>
-          <p>This metadata gap matters because transcripts are not just a user-interface feature. They are the layer that lets search engines, recommendation systems, accessibility tools and summarisation systems understand the internal content of a podcast. If only a small share of episodes expose structured transcript metadata, then most of the podcast archive remains difficult to search and difficult to reuse. In this sense, AI transcription is not simply a convenience for listeners; it is an infrastructure upgrade for the whole ecosystem.</p>
-          <div class="note"><strong>Key domain insight:</strong> the bottleneck is not only audio production. It is knowledge visibility. AI matters because it can make podcast knowledge searchable, accessible and distributable at the level of ideas, not only at the level of whole episodes.</div>
-        </section>
-
-        <section class="card" id="technology">
-          <h2>2. AI and machine learning technologies in podcasting</h2>
-          <p class="lead">The central AI transformation in podcasting can be understood as a pipeline. Each stage adds structure: raw audio becomes text; text becomes attributed speech; long transcripts become topic-based chunks; chunks become searchable vectors; search results become grounded summaries and recommendations; translation and dubbing extend the content across languages.</p>
-          <div class="flow" aria-label="Podcast AI pipeline">
-            <div class="step">Audio<span>raw waveform</span></div>
-            <div class="step">Transcript<span>ASR + timestamps</span></div>
-            <div class="step">Speaker labels<span>who spoke when</span></div>
-            <div class="step">Semantic chunks<span>topic units</span></div>
-            <div class="step">Vector search<span>meaning retrieval</span></div>
-            <div class="step">RAG / summary<span>cited answers</span></div>
+          <div class="risk-card">
+            <span class="badge">Fairness</span>
+            <h4>Who decides which voices are heard?</h4>
+            <p>AI discovery may help niche creators, but it may also favour popular shows and machine-friendly speech.</p>
           </div>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>AI pipeline as a knowledge flow</h4>
-              <p class="chart-note">A Sankey chart represents how raw audio is transformed into multiple user-facing outputs.</p>
-            </div>
-            <div id="chart-pipeline" class="chart"></div>
+          <div class="risk-card">
+            <span class="badge">Ownership</span>
+            <h4>Does AI unlock or replace listening?</h4>
+            <p>AI answers may capture attention and value without returning listens, revenue or control to creators.</p>
           </div>
+        </div>
 
-          <h3>2.1 Automatic Speech Recognition: converting audio into text</h3>
-          <p>Automatic Speech Recognition, or ASR, is the foundation of podcast AI. Its task is to convert speech audio into text. In a podcast context, ASR takes an audio waveform and produces a transcript, ideally with word-level timestamps and confidence scores. Without transcript text, search, summarisation, translation, recommendation and moderation become much harder.</p>
-          <p>Modern ASR relies heavily on deep learning. Systems use neural encoders to represent acoustic signals and decoders to map them into words or tokens. OpenAI's Whisper is an influential example. It was trained on 680,000 hours of multilingual and multitask supervised audio data collected from the web, enabling transcription, speech translation and language identification across diverse conditions <a class="cite" href="#ref-9">(9)</a>. Another important approach is wav2vec 2.0, which learns speech representations from raw audio through self-supervised pretraining. Baevski et al. show that wav2vec 2.0 can achieve strong performance with limited labelled data; using only ten minutes of labelled data and pretraining on 53,000 hours of unlabelled data, it achieved 4.8/8.2 WER on LibriSpeech test-clean/test-other <a class="cite" href="#ref-10">(10)</a>.</p>
-          <p>For podcasting, ASR creates four benefits. First, it makes internal episode search possible. Second, it enables accessibility for deaf and hard-of-hearing users. Third, it creates input for summarisation, translation, semantic search and recommendation. Fourth, it supports content moderation by turning spoken claims into analysable text.</p>
-          <p>ASR quality is often measured by Word Error Rate, or WER. However, average WER is not enough. Platforms must measure performance across accents, dialects, genders, ages, languages and audio conditions. Koenecke et al. found that major ASR systems produced substantially higher error rates for Black speakers than for white speakers, showing that ASR can encode unequal access to machine-readable speech <a class="cite" href="#ref-11">(11)</a>. If a speaker's words are misrecognised, their knowledge becomes less searchable, less quotable and less likely to be fairly represented downstream.</p>
+        <h3 id="accuracy-trust">4.1 Accuracy and Trust: Can AI Accurately Represent What Was Said?</h3>
+        <p>The first ethical issue is accuracy and trust. Podcast AI can fail at several levels: transcription, speaker attribution, retrieval and summarisation. Each failure changes how users understand the original conversation.</p>
 
-          <h3>2.2 Speaker diarization: identifying who spoke when</h3>
-          <p>Podcasts are often conversations. A transcript without speaker labels is useful, but incomplete. In an interview, the distinction between host, guest, co-host and caller is essential. Speaker diarization answers the question: <em>who spoke when?</em></p>
-          <p>A typical diarization pipeline includes voice activity detection, speaker segmentation, speaker embedding and clustering. The system identifies speech regions, detects likely speaker changes, represents speech segments as embeddings, and groups segments that likely belong to the same speaker. The pyannote.audio 2.1 diarization pipeline uses speaker segmentation, neural speaker embedding and global agglomerative clustering <a class="cite" href="#ref-12">(12)</a>.</p>
-          <blockquote>
-            Speaker labels turn a transcript from flat text into attributable knowledge. Without them, an AI summary may confuse the host's question with the guest's position, or merge disagreement into a false consensus.
-          </blockquote>
-          <p>The main metric is Diarization Error Rate, or DER, which combines missed speech, false alarm speech and speaker confusion. For podcasting, speaker confusion is especially damaging because it can cause false attribution. A summary is not trustworthy if it captures a sentence correctly but assigns it to the wrong person.</p>
+        <h4>4.1.1 Transcription Errors Affect Access and Meaning</h4>
+        <p>Transcription errors affect both access and meaning. Accents, dialects, background noise and overlapping speech can all reduce ASR accuracy, but these errors are not evenly distributed across speakers. Koenecke et al.'s study of five commercial ASR systems found substantial racial disparities in word error rates: in their tested U.S. speech samples, the systems produced higher average error rates when transcribing Black speakers than white speakers <a class="cite" href="#ref-26">[26]</a>. This disparity should be understood as a limitation of ASR systems and their training data, not as a deficiency of speakers. For podcasting, the consequence is serious: if some speakers are transcribed less accurately, their contributions may become less searchable, less quotable and less visible.</p>
 
-          <h3>2.3 Semantic chunking: turning long transcripts into knowledge units</h3>
-          <p>After transcription and diarization, the next challenge is length. A three-hour podcast may produce tens of thousands of words. A full transcript is searchable, but it may still be too long to navigate. Semantic chunking divides a long transcript into coherent topic-based units.</p>
-          <p>A simple system might split an episode every five minutes. A better system uses meaning. It combines timestamp boundaries, speaker turns, topic shifts, discourse markers, keyword changes, embedding similarity and LLM analysis. The goal is to identify natural sections such as “introduction to carbon taxes”, “distributional concerns”, “international examples”, “host challenge” and “guest response”.</p>
-          <p>Chunk size matters. If chunks are too short, search results lose context. If chunks are too long, retrieval becomes imprecise. In practice, a podcast chunk might contain 300–800 words, with overlap between adjacent chunks to preserve context. Each chunk can be stored with start time, end time, speaker labels, transcript text, summary, keywords, named entities and an embedding.</p>
+        <h4>4.1.2 The Risk of Over-Summary</h4>
+        <p>The AI summary might take things out of context. If a complex discussion is compressed into three sentences, the original tone, reserved opinions and rebuttal relationships may disappear. This is especially dangerous because users may trust a summary without checking the original audio.</p>
+        <blockquote><strong>Original:</strong> Carbon taxes can work if revenue is redistributed to households.<br /><strong>Error summary:</strong> The guest supports carbon taxes.</blockquote>
+        <p>The summary is not completely false, but it removes the condition that makes the argument meaningful. In political, scientific or medical discussions, this difference can be very important. A responsible system should therefore mark the difference between direct quotation, close paraphrase and generated interpretation.</p>
 
-          <h3>2.4 Embeddings, vector search and semantic retrieval</h3>
-          <p>Keyword search is limited because users rarely know the exact words used in an episode. A listener may search for “carbon tax”, while the speaker said “putting a price on emissions”. Semantic search addresses this by searching meaning rather than exact words.</p>
-          <p>Embedding models convert text into numerical vectors. Semantically similar texts are placed near each other in vector space. Sentence-BERT modifies BERT with siamese and triplet network structures so that sentence embeddings can be compared efficiently with cosine similarity. Reimers and Gurevych show that SBERT reduces the time needed to find similar sentence pairs from about 65 hours with BERT/RoBERTa to about 5 seconds, while maintaining strong semantic similarity performance <a class="cite" href="#ref-13">(13)</a>. Dense Passage Retrieval applies a similar idea to open-domain question answering, using dense representations learned through a dual-encoder framework <a class="cite" href="#ref-14">(14)</a>.</p>
-          <p>For podcasts, semantic retrieval works as follows. Each semantic chunk is converted into an embedding and stored in a vector database. The user's query is converted into another embedding. The database retrieves the nearest chunks and returns episode titles, timestamps, summaries and transcript excerpts. This changes podcast discovery from episode-level search to argument-level search.</p>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Semantic search as meaning-based retrieval</h4>
-              <p class="chart-note">Illustrative scatter plot: semantically related podcast chunks cluster near the user's query even when they use different words.</p>
-            </div>
-            <div id="chart-vector" class="chart small"></div>
-          </div>
+        <h4>4.1.3 Speaker Attribution Errors Affect Accountability</h4>
+        <p>Speaker attribution errors affect accountability. A correct sentence assigned to the wrong speaker is still a serious error. In podcasts, the speaker relationship often carries the meaning. The host may challenge a claim, the guest may qualify it, and another guest may disagree. If the system assigns these turns incorrectly, the transcript misrepresents the conversation.</p>
 
-          <h3>2.5 Retrieval-Augmented Generation and grounded podcast Q&amp;A</h3>
-          <p>Semantic retrieval becomes more powerful when combined with large language models. Retrieval-Augmented Generation, or RAG, connects a generator with an external knowledge store. Lewis et al. define RAG as a method that combines a pretrained sequence-to-sequence model with a non-parametric memory accessed by a neural retriever <a class="cite" href="#ref-15">(15)</a>. In podcasting, the external memory is not Wikipedia but the indexed transcript chunks of podcast episodes.</p>
-          <p>A podcast RAG system can answer questions such as: “What was the guest's position on AI copyright?” The system first retrieves relevant chunks with timestamps, then generates an answer based on those chunks. A responsible answer should cite the original audio: for example, “The guest supported opt-in licensing for AI training and revenue sharing when AI answers replace listening (42:10–44:35; 51:20–53:05).”</p>
-          <div class="callout"><strong>No timestamp, no trust.</strong> Podcast AI summaries should act as navigational layers that bring users back to source audio, not as source-independent authority.</div>
+        <h4>4.1.4 Responsible Design: Evidence-Based Summaries</h4>
+        <p>Responsible podcast AI should be built around evidence-based summaries. Every important AI-generated claim should link back to the original timestamp. No timestamp, no trust.</p>
+        <ul>
+          <li><strong>Timestamp citation and transcript evidence:</strong> important claims should cite the supporting transcript segment and provide a play button for the original audio.</li>
+          <li><strong>Uncertainty labels:</strong> if transcript confidence is low or retrieval evidence is weak, the system should say so.</li>
+          <li><strong>Creator control:</strong> transcript generation should be opt-out or editable, and AI summaries should be reviewable where they represent the creator's work.</li>
+        </ul>
 
-          <h3>2.6 LLM summarisation and automatic chaptering</h3>
-          <p>Large language models can turn long transcripts into summaries, chapters, learning notes, question lists, social clips and newsletters. For podcasts, summarisation should be hierarchical. Instead of asking a model to summarise a three-hour transcript in one pass, the system should summarise chunks, combine chunk summaries into section summaries, and then produce an episode-level summary.</p>
-          <p>Automatic chaptering is a practical application. Spotify states that automatic chapters are generated from episode transcripts and that creators can edit chapter titles and timestamps <a class="cite" href="#ref-6">(6)</a>. Users can then jump directly to the part of the discussion they care about.</p>
-          <p>However, dialogue summarisation is risky because conversations include interruptions, disagreements, hedging, sarcasm and implied context. TofuEval, a benchmark for topic-focused dialogue summarisation, finds that existing LLMs produce significant factual errors in dialogue summaries regardless of model size <a class="cite" href="#ref-16">(16)</a>. This is why summaries should include timestamp citations and allow users to inspect the underlying transcript.</p>
+        <h3 id="fairness-visibility">4.2 Fairness and Visibility: Who Decides Which Is Heard?</h3>
+        <p>The second ethical issue is fairness. AI discovery may help users find niche creators, but it may also reinforce inequality if the system favours content that is easier to transcribe, classify and summarise.</p>
 
-          <h3>2.7 Recommendation systems: from show-level recommendation to segment-level discovery</h3>
-          <p>Recommendation systems decide what users see and what creators can reach an audience. Traditional podcast recommendation uses show categories, subscriptions, listening history, popularity and user similarity. AI allows recommendation to operate at the level of segments and ideas.</p>
-          <p>A platform could know not only that a show is about technology, but also that a specific episode contains a 12-minute discussion of AI copyright, a 9-minute explanation of speech recognition, and a 6-minute critique of platform monetisation. This enables more precise matching between users and content.</p>
-          <p>Technically, podcast recommendation can combine collaborative filtering, content-based recommendation, graph-based recommendation and learning-to-rank models. Evaluation should go beyond clicks. Better podcast recommendation should also measure long-term satisfaction, topic diversity, novelty, cold-start success and creator exposure.</p>
-          <p>Fairness is central. Deldjoo et al. argue that recommender systems strongly influence which information people see online and therefore affect beliefs, decisions, actions and business outcomes <a class="cite" href="#ref-17">(17)</a>. In podcasting, recommendation is not only a convenience feature; it is visibility infrastructure.</p>
+        <h4>4.2.1 AI Discovery May Also Reinforce Inequality</h4>
+        <p>If recommendation systems reward content that is easy to transcribe, summarise and classify, they may favour creators who speak in structured, standardised and machine-readable ways. Creators with regional accents, multilingual speech, noisy recording environments or informal conversational styles may become less visible.</p>
+        <p>AI discovery therefore has two sides. It can reduce the cold-start problem by understanding content semantically. But it can also create a new form of algorithmic inequality. Fair podcast AI should not only optimise what users like; it should also consider whose voices become discoverable.</p>
 
-          <h3>2.8 AI translation, dubbing and voice cloning</h3>
-          <p>Language is another barrier in podcasting. AI dubbing combines ASR, machine translation, text-to-speech and sometimes voice cloning. The pipeline is: transcribe source audio, translate the transcript, generate target-language speech, align the new audio with the original timing, and optionally preserve the speaker's voice style.</p>
-          <p>VALL-E demonstrates zero-shot text-to-speech by generating speech from phoneme and acoustic code prompts <a class="cite" href="#ref-18">(18)</a>. Meta's Voicebox can synthesise speech across six languages, remove transient noise, edit content and transfer audio style across languages <a class="cite" href="#ref-19">(19)</a>. Commercial tools such as ElevenLabs Dubbing Studio advertise localisation across 29 languages while preserving speaker emotion, timing, tone and voice characteristics <a class="cite" href="#ref-20">(20)</a>.</p>
-          <p>For podcasting, this could expand global reach dramatically. Educational shows could become multilingual learning resources, and independent creators could reach audiences beyond their native language. Yet voice cloning is ethically sensitive because a voice is not merely content; it is also identity.</p>
+        <h4>4.2.2 Responsible Design: Explainable Recommendation and Appeal</h4>
+        <p>Responsible design should include explainable recommendation and appeal mechanisms. Creators should be able to see how their content is represented by the system: detected topics, indexed segments, transcript confidence, moderation flags and recommendation exposure. Without such information, creators are judged by a black-box system they cannot inspect.</p>
+        <p>Platforms should also provide appeal mechanisms. If a creator believes a transcript, topic label, moderation decision or ranking signal is wrong, they should have a way to challenge it. Fairness is not achieved by claiming that the algorithm is neutral. It is achieved by making the system inspectable, correctable and accountable.</p>
 
-          <h3>2.9 Audio enhancement and source separation</h3>
-          <p>AI also improves production. Many independent creators record in bedrooms, offices, cafés or remote calls. Background noise, echo, uneven loudness and overlapping speech reduce listening quality and can also reduce ASR accuracy. Audio enhancement models operate on waveforms or spectrograms to remove noise, reduce reverberation, isolate speech and normalise loudness.</p>
-          <p>Adobe Podcast's Enhance Speech tool is designed to make voice recordings sound as if they were recorded in a professional studio <a class="cite" href="#ref-21">(21)</a>. Source separation tools such as Spleeter and Demucs separate mixed audio into components. Spleeter can separate a mix into stems and was reported to process four-stem separation up to 100 times faster than real time on a GPU <a class="cite" href="#ref-22">(22)</a>. Demucs uses neural source-separation methods that combine waveform and spectrogram approaches <a class="cite" href="#ref-23">(23)</a>.</p>
+        <h3 id="ownership-value">4.3 Ownership and Value Extraction: Does AI Replace Listening?</h3>
+        <p>The third ethical issue is ownership and value extraction. AI makes podcast knowledge more accessible, but if users no longer listen to the original programmes, do creators lose their value instead?</p>
 
-          <h3>2.10 A concrete pipeline example: the climate-policy student</h3>
-          <p>To see how the technologies work together, return to the student searching for a carbon-tax discussion inside a three-hour podcast. In the traditional interface, she only has a title, a description and a progress bar. In an AI-enhanced interface, the platform first applies audio enhancement to reduce noise, then uses ASR to create a timestamped transcript. Speaker diarization labels the host and guest, so the system can distinguish a question from an answer. Semantic chunking then divides the episode into topic units such as “carbon pricing definition”, “political backlash”, “distributional fairness” and “international policy examples”.</p>
-          <p>When the student searches “why are carbon taxes hard to pass politically?”, the system embeds her query and retrieves semantically related chunks even if the guest used phrases such as “putting a price on emissions” rather than the exact phrase “carbon tax”. A RAG layer can then generate a short answer, but the answer should include clickable timestamps. The interface might show: “The guest argues that carbon taxes face voter resistance when fuel prices are visible, and that revenue recycling can reduce the burden on low-income households (42:10–47:35).” The student can read the summary, inspect the transcript, and play the original moment.</p>
-          <p>This example shows why the pipeline should be judged as a knowledge system rather than a set of isolated tools. ASR alone produces text, but without diarization the text may misattribute claims. Diarization alone identifies speakers, but without chunking the transcript remains too long. Chunking alone creates sections, but without embeddings the user still has to guess keywords. RAG alone is risky unless it is grounded in timestamped evidence. The value comes from integration: each layer makes the next layer more useful, and each layer also introduces a new point where fairness, accuracy and creator control must be governed.</p>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Technology impact map</h4>
-              <p class="chart-note">Illustrative radar chart comparing major AI technologies by podcast impact areas. Scores are interpretive, not external measurements.</p>
-            </div>
-            <div id="chart-radar" class="chart"></div>
-          </div>
+        <h4>4.3.1 The Zero-Click Consumption Problem</h4>
+        <p>Zero-click experiences are already discussed in web search, where users receive answers directly from the search interface rather than visiting the original publisher. Bain has argued that AI-driven zero-click search changes marketing and discovery because users may no longer click through to the original source <a class="cite" href="#ref-27">[27]</a>. By analogy with zero-click search, podcast AI could create a similar zero-click listening problem: users may get the knowledge without listening to the source. For example, a RAG-powered "chat with podcasts" interface could give users the key takeaways without requiring them to play the episode. This is convenient for users, but it creates a zero-click consumption problem.</p>
+        <p>If the platform turns the podcast library into a RAG-powered answer engine, users may directly obtain key points through Q&amp;A and AI summaries, thereby skipping the original programme, reducing listens, watch-time and ad revenue. A good AI summary should help users decide where to listen; a bad AI summary becomes a substitute that extracts the value of listening while bypassing the creator.</p>
 
+        <h4>4.3.2 Creator Value and Platform Capture</h4>
+        <p>The creator produces the knowledge, but the AI interface captures the attention. The creator may lose the listen, the completion rate and the ad revenue as AI becomes a value extractor.</p>
+        <p>This raises a basic question: who should profit when AI turns a creator's long-form conversation into instant answers? If a platform uses a podcast episode to answer a user's question, the platform benefits from the creator's labour. If the AI interface captures the user's attention without returning value to the people who produced the episode, then attribution alone is not enough.</p>
+        <p>The issue is connected to wider debates about publisher control over AI summaries. In 2026, reporting on the UK Competition and Markets Authority described proposed measures requiring more meaningful publisher choice over whether content is used in AI-generated summaries in Google Search <a class="cite" href="#ref-28">[28]</a>. Podcasts face a parallel question. Creators need meaningful control over whether their work is indexed, summarised, used for Q&amp;A or used for model training.</p>
+
+        <h4>4.3.3 Responsible Design: Granular Consent and Revenue Sharing</h4>
+        <p>Platforms should offer granular consent options to creators. Permission should not be treated as a single yes-or-no decision, because different AI uses create different levels of risk and value extraction. At minimum, creators should be able to distinguish between four forms of AI use:</p>
+        <ol>
+          <li><strong>Training:</strong> using podcast audio or transcripts to train, fine-tune or improve AI models.</li>
+          <li><strong>Indexing:</strong> storing transcripts, metadata or embeddings so that episodes and segments can appear in search results.</li>
+          <li><strong>Summarisation:</strong> generating show notes, chapter titles, previews or learning notes from the transcript.</li>
+          <li><strong>Question-answering:</strong> allowing users to ask an AI system questions that are answered from the episode without necessarily playing the original audio.</li>
+        </ol>
+        <p>The permissions should be separated rather than bundled together. For example, a creator may allow accessibility transcripts and search indexing, but reject model training. Another creator may allow short chapter summaries, but reject full conversational Q&amp;A features that could substitute for listening. The platform interface should make these choices visible, reversible and understandable. It should also specify whether creators receive attribution, playback traffic or revenue when AI-generated answers are based on their work.</p>
+        <p>Copyright law already recognises that creators have rights over the expression of their original works, including copying, distribution, adaptation and public communication <a class="cite" href="#ref-29">[29]</a> <a class="cite" href="#ref-30">[30]</a>. However, copyright does not straightforwardly solve every AI podcast question, because an AI answer may extract facts, themes or arguments rather than reproduce a long passage verbatim. This is why podcast AI governance should not rely on copyright alone. It also needs consent, attribution, provenance and fair value-sharing mechanisms. Podcast AI needs a similar norm for knowledge provenance: which episode supported this answer, whose voice was used, and what value flowed back? If AI interfaces monetise podcast knowledge, attribution alone is not enough; creators need control over use and a fair share of the value created from their work.</p>
+
+        <h3 id="ethics-mapping">4.4 Summary of the Ethics-to-Responsible Design Mapping</h3>
+        <p>Three risks require three responses: accuracy requires evidence; fairness requires explainability; ownership requires consent and compensation. Table 1 summarises this mapping. Figure 6 then shows the larger design principle: responsible podcast AI should guide users back to the original conversation.</p>
+        <div class="table-wrap">
           <table>
-            <thead><tr><th>Technology</th><th>Podcast problem addressed</th><th>Core method</th><th>Useful metrics</th><th>Main risk</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Ethical risk</th>
+                <th>Main danger</th>
+                <th>Governance response</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>ASR</td><td>Audio cannot be searched or accessed by deaf users.</td><td>Transformer ASR, weak supervision, self-supervised speech learning.</td><td>WER, confidence score, timestamp accuracy.</td><td>Accent and dialect bias.</td></tr>
-              <tr><td>Speaker diarization</td><td>Transcript does not show who spoke.</td><td>Voice activity detection, speaker embeddings, clustering.</td><td>DER, speaker confusion rate.</td><td>False attribution.</td></tr>
-              <tr><td>Semantic search</td><td>Keyword search misses meaning.</td><td>Sentence embeddings, dense retrieval, vector database.</td><td>Recall@k, MRR, NDCG.</td><td>Retrieval bias or irrelevant matches.</td></tr>
-              <tr><td>RAG and summarisation</td><td>Long episodes are hard to skim.</td><td>Retrieval-augmented generation, hierarchical summarisation.</td><td>Factual consistency, citation coverage.</td><td>Hallucination or over-compression.</td></tr>
-              <tr><td>Recommendation</td><td>New creators are hard to discover.</td><td>Hybrid recommender, graph models, learning-to-rank.</td><td>Relevance, diversity, exposure fairness.</td><td>Platform opacity and popularity bias.</td></tr>
-              <tr><td>AI dubbing</td><td>Content is locked in one language.</td><td>ASR, machine translation, TTS, voice cloning.</td><td>Translation quality, MOS, speaker similarity.</td><td>Voice rights and consent.</td></tr>
+              <tr>
+                <td>Accuracy and trust</td>
+                <td>AI summaries distort nuance or assign claims to the wrong speaker.</td>
+                <td>Timestamp citation, transcript evidence, uncertainty labels and editable transcripts.</td>
+              </tr>
+              <tr>
+                <td>Fairness and visibility</td>
+                <td>Algorithms decide who is heard, often favouring already popular or machine-friendly speech.</td>
+                <td>Explainable recommendation, creator dashboards, exposure metrics and appeal mechanisms.</td>
+              </tr>
+              <tr>
+                <td>Ownership and value extraction</td>
+                <td>AI answers replace listening while platforms capture value from creator knowledge.</td>
+                <td>Granular consent, separate permissions, attribution, playback links and revenue sharing.</td>
+              </tr>
             </tbody>
           </table>
-        </section>
+        </div>
 
-        <section class="card" id="ethics">
-          <h2>3. Ethical implications: who controls AI-mediated podcast knowledge?</h2>
-          <p class="lead">AI makes podcast knowledge more accessible, but it also changes the power structure of podcasting. In the past, users had to listen to original episodes. Now they may read AI summaries or ask a chatbot for key points. In the past, platforms recommended episodes. Now they may recommend fragments, generate answers, translate voices and produce synthetic versions of creators' work.</p>
-
-          <h3>3.1 Accuracy and trust: summaries can misrepresent nuance</h3>
-          <p>Podcast summaries do not only risk inventing facts. They also risk flattening nuance. A guest may say: “Carbon taxes can be economically efficient, but without redistribution they may harm low-income households.” A careless AI summary may reduce this to: “The guest supports carbon taxes.” The summary is not entirely false, but it removes the condition that made the argument responsible.</p>
-          <p>This matters because podcasts often contain disagreement, uncertainty, humour, sarcasm and evolving arguments. Dialogue summarisation is harder than summarising a polished article. TofuEval shows that LLM-generated dialogue summaries can contain significant factual errors <a class="cite" href="#ref-16">(16)</a>. Therefore, podcast AI should not present summaries as source-independent truth.</p>
-          <p>The best solution is timestamp citation. Every important claim in an AI summary should be linked to the exact audio segment and transcript evidence. A reliable system should allow users to click from a generated sentence back to the original moment. NIST's AI Risk Management Framework emphasises trustworthy AI characteristics including validity, reliability, safety, accountability, transparency, explainability, privacy and fairness <a class="cite" href="#ref-24">(24)</a>.</p>
-
-          <h3>3.2 Fairness and visibility: recommendation systems decide who is heard</h3>
-          <p>AI-powered semantic recommendation could help small creators. A new podcast with few subscribers could still be recommended if a specific segment matches a user's interest. This would be a major improvement over purely popularity-based discovery.</p>
-          <p>However, recommendation systems can also reinforce inequality. If models prefer already popular shows, celebrity guests, standard accents, dominant languages or highly engaging controversy, AI will make the rich-get-richer dynamic stronger. The Knight First Amendment Institute explains that who hears online speech is determined largely by algorithms, because recommender systems are the engine of major social platforms <a class="cite" href="#ref-25">(25)</a>. Podcast platforms increasingly operate in the same way.</p>
-          <div class="chart-card">
-            <div class="chart-title">
-              <h4>Recommendation fairness matrix</h4>
-              <p class="chart-note">Illustrative matrix: the ideal system should optimise both user relevance and creator exposure fairness.</p>
-            </div>
-            <div id="chart-fairness" class="chart small"></div>
+        <div class="figure">
+          <div class="figure-title">
+            <h4>Figure 6. Responsible podcast AI as a bridge back to original listening</h4>
+            <p>The system should guide users from generated answers back to evidence, playback and creator value.</p>
           </div>
-          <p>Podcast recommendation fairness should include at least three dimensions: exposure fairness, representation fairness and explainability. Creators should be able to understand why their content was recommended, restricted or ignored. They should also be able to correct metadata errors when automatic transcripts or topic classifiers misrepresent their work.</p>
-
-          <h3>3.3 Ownership and value extraction: AI may replace the original episode</h3>
-          <p>The most important ethical issue is ownership. AI can unlock podcast knowledge, but it can also extract value from creators. Imagine that a large platform builds a RAG-powered “chat with podcasts” interface over its entire library. A user asks: “Summarise this guest's position on AI copyright.” The system returns paragraphs, key claims and timestamps. The user gains the knowledge but may not play the episode. The creator loses listens, advertising impressions and possible subscription conversions.</p>
-          <p>This creates a platform-economy problem. The creator produced the knowledge. The platform indexed it. The AI interface captured the user's attention. Who should receive the value? RAG can be beneficial when it directs users back to original sources, but if AI answers become substitutes for listening, they may reduce the economic value of podcast creation.</p>
-          <p>Policy debates around AI and copyright are moving in this direction. The EU General-Purpose AI Code of Practice focuses on transparency, copyright, safety and security obligations for general-purpose AI models <a class="cite" href="#ref-26">(26)</a>. The UK government's report on copyright and AI discusses the use of copyright works in AI development, transparency, licensing and enforcement <a class="cite" href="#ref-27">(27)</a>. The U.S. Copyright Office has published reports on digital replicas, AI output copyrightability and generative AI training <a class="cite" href="#ref-28">(28)</a>.</p>
-
-          <h3>3.4 Privacy and voice rights: a voice is both content and identity</h3>
-          <p>Voice cloning adds a further ethical layer. A podcast voice is not just speech content; it can be a biometric and personal identifier. The UK Information Commissioner's Office explains that biometric data is personal information when it allows unique identification, and special category biometric data when used for that purpose <a class="cite" href="#ref-29">(29)</a>. Voiceprints and synthetic voice models therefore require stronger consent and governance than ordinary transcripts.</p>
-          <p>Voice cloning can be useful for multilingual dubbing and accessibility, but it can also be abused. The U.S. Federal Trade Commission warns that voice cloning can enable fraud, extortion scams, appropriation of voice artists' voices and public deception <a class="cite" href="#ref-30">(30)</a>. Podcast platforms should distinguish between transcribing speech content and copying vocal identity. The second requires explicit consent, clear labelling, revocation rights and audit trails.</p>
-
-          <h3>3.5 Labour impact: automation lowers costs but reorganises work</h3>
-          <p>AI transcription, editing, dubbing and clip generation reduce production time. This helps independent creators who cannot afford professional studios, editors, translators or marketing teams. It may make podcasting more open and diverse.</p>
-          <p>However, automation also affects workers who support the podcast economy: transcriptionists, audio engineers, editors, translators, voice actors, caption writers and producers. Some tasks will be automated or commoditised. New roles will also emerge: AI audio producer, transcript reviewer, prompt designer, rights clearance specialist, synthetic voice supervisor and AI content operations manager. The ethical issue is whether the industry creates a fair transition instead of simply displacing labour.</p>
-        </section>
-
-        <section class="card" id="governance">
-          <h2>4. Governance recommendations</h2>
-          <p class="lead">Responsible podcast AI should be built around practical controls that protect listeners, creators and platforms while preserving the benefits of machine-readable audio.</p>
-          <div class="tech-tabs">
-            <details class="tech" open>
-              <summary>Timestamp citation should be mandatory</summary>
-              <p>AI summaries, chapters, highlights and answers should include timestamp citations. Users should be able to click from a claim to the original audio and transcript. A podcast AI system should follow the rule: no important claim without evidence.</p>
-            </details>
-            <details class="tech">
-              <summary>Transcripts should be editable and contestable</summary>
-              <p>ASR errors affect accessibility, search, recommendation and creator reputation. Platforms should allow creators to upload or edit transcripts in standard formats such as VTT or SRT. Low-confidence passages and uncertain speaker labels should be visibly marked.</p>
-            </details>
-            <details class="tech">
-              <summary>Recommendation systems should be explainable</summary>
-              <p>Creators should know what topics, guests and segments the platform detected. They should also know whether distribution was limited by moderation, transcript errors or classification issues. Platforms should provide appeal mechanisms.</p>
-            </details>
-            <details class="tech">
-              <summary>Creator consent should be granular</summary>
-              <p>Public podcast availability should not imply consent for all AI uses. Consent should be separated across transcript generation, search indexing, summarisation, translation, dubbing, RAG Q&amp;A, model training and voice cloning.</p>
-            </details>
-            <details class="tech">
-              <summary>Revenue sharing should apply when AI substitutes for listening</summary>
-              <p>If AI-generated answers capture value that would otherwise flow to creators through listens, ads, subscriptions or memberships, platforms should share revenue. Attribution alone is insufficient when AI interfaces become the main user experience.</p>
-            </details>
-            <details class="tech">
-              <summary>Synthetic audio and AI translation should be labelled</summary>
-              <p>AI-generated voices, translated versions and dubbed podcasts should be labelled. EU AI Act transparency obligations for synthetic and manipulated content point toward this broader standard <a class="cite" href="#ref-31">(31)</a>.</p>
-            </details>
+          <div class="loop" aria-label="Responsible podcast AI loop">
+            <div class="loop-core">AI should unlock podcast knowledge, not extract it.</div>
+            <div class="loop-node one"><strong>User question</strong>Search or ask in natural language.</div>
+            <div class="loop-node two"><strong>Grounded answer</strong>Summaries cite transcript evidence and timestamps.</div>
+            <div class="loop-node three"><strong>Original listening</strong>Play from the relevant moment and inspect context.</div>
+            <div class="loop-node four"><strong>Creator value</strong>Attribution, control, traffic and revenue flow back.</div>
           </div>
-          <table>
-            <thead><tr><th>Risk</th><th>Why it matters</th><th>Governance response</th></tr></thead>
-            <tbody>
-              <tr><td>Inaccurate summaries</td><td>Nuanced arguments may be flattened or misrepresented.</td><td>Timestamp citations, transcript evidence, human review for sensitive topics.</td></tr>
-              <tr><td>ASR bias</td><td>Some accents, dialects or languages may become less searchable.</td><td>Bias audits, model evaluation across groups, editable transcripts.</td></tr>
-              <tr><td>Opaque recommendation</td><td>Platforms decide which creators are visible.</td><td>Creator-facing explanations, exposure fairness metrics, appeal mechanisms.</td></tr>
-              <tr><td>Value extraction</td><td>AI answers may reduce listens and ad revenue.</td><td>Opt-in licensing, attribution, click-through design, revenue sharing.</td></tr>
-              <tr><td>Voice cloning misuse</td><td>A creator's voice can be copied without consent.</td><td>Explicit consent, labelling, revocation rights, synthetic media watermarking.</td></tr>
-              <tr><td>Labour displacement</td><td>AI may reduce demand for transcription, editing and dubbing work.</td><td>Upskilling, human-in-the-loop workflows, quality standards.</td></tr>
-            </tbody>
-          </table>
-        </section>
+        </div>
 
-        <section class="card" id="conclusion">
-          <h2>5. Conclusion: AI should unlock podcast knowledge, not extract it</h2>
-          <p class="lead">Podcasting is valuable because it supports long conversations, trust, tone and context. It is not always the fastest way to consume information, but it is one of the best formats for complex explanation and human dialogue. The problem is that this knowledge has historically been trapped in long audio files.</p>
-          <p>AI can change this. ASR turns speech into text. Diarization identifies speakers. Semantic chunking converts long transcripts into navigable units. Embeddings and vector databases allow users to search by meaning. RAG and LLM summarisation create grounded answers and learning notes. Recommendation systems can help relevant segments reach the right audiences. Translation, dubbing and audio enhancement can make podcasting more global, accessible and professional.</p>
-          <p>Yet AI also changes who controls podcast knowledge. ASR decides whose voice is accurately recorded. Summarisation decides which nuances survive compression. Recommendation decides who is heard. RAG interfaces decide whether users return to the original episode. Voice cloning decides whether a creator's vocal identity can be reused. These are not merely technical choices; they are governance choices.</p>
-          <div class="thesis">The responsible path is not to use AI to replace listening. It is to use AI to make listening more searchable, inclusive, verifiable and economically fair. AI should unlock podcast knowledge, not extract it.</div>
-        </section>
+        <p>Responsible podcast AI should be designed as a bridge back to original listening, not as a platform-controlled substitute that extracts knowledge, attention and revenue from creators.</p>
+      </section>
 
-        <section class="card refs" id="references">
-          <h2>References</h2>
-          <ol>
-            <li id="ref-1">Edison Research at SSRS. <em>The Infinite Dial 2026</em>. <a href="https://www.edisonresearch.com/the-infinite-dial-2026/">https://www.edisonresearch.com/the-infinite-dial-2026/</a></li>
-            <li id="ref-2">Grand View Research. <em>Podcasting Market Size and Share: Industry Report, 2030</em>. <a href="https://www.grandviewresearch.com/industry-analysis/podcast-market">https://www.grandviewresearch.com/industry-analysis/podcast-market</a></li>
-            <li id="ref-3">Podcast Industry Insights. <em>Podcast Index Statistics</em>. <a href="https://podcastindustryinsights.com/podcast-index-statistics">https://podcastindustryinsights.com/podcast-index-statistics</a></li>
-            <li id="ref-4">Podcast Industry Insights. <em>Podcasting 2.0 Statistics</em>. <a href="https://podcastindustryinsights.com/podcasting-2-0-statistics">https://podcastindustryinsights.com/podcasting-2-0-statistics</a></li>
-            <li id="ref-5">Apple. <em>Apple introduces transcripts for Apple Podcasts</em>. <a href="https://www.apple.com/uk/newsroom/2024/03/apple-introduces-transcripts-for-apple-podcasts/">https://www.apple.com/uk/newsroom/2024/03/apple-introduces-transcripts-for-apple-podcasts/</a></li>
-            <li id="ref-6">Spotify for Creators. <em>Amplifying your show on Spotify with automatic transcripts, chapters, and more</em>. <a href="https://creators.spotify.com/resources/grow/automated-transcripts-chapters">https://creators.spotify.com/resources/grow/automated-transcripts-chapters</a></li>
-            <li id="ref-7">World Health Organization. <em>Deafness and hearing loss</em>. <a href="https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss">https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss</a></li>
-            <li id="ref-8">W3C Web Accessibility Initiative. <em>Transcripts</em>. <a href="https://www.w3.org/WAI/media/av/transcripts/">https://www.w3.org/WAI/media/av/transcripts/</a></li>
-            <li id="ref-9">Radford, A. et al. <em>Robust Speech Recognition via Large-Scale Weak Supervision</em>. <a href="https://arxiv.org/abs/2212.04356">https://arxiv.org/abs/2212.04356</a></li>
-            <li id="ref-10">Baevski, A. et al. <em>wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations</em>. <a href="https://arxiv.org/abs/2006.11477">https://arxiv.org/abs/2006.11477</a></li>
-            <li id="ref-11">Koenecke, A. et al. <em>Racial disparities in automated speech recognition</em>. PNAS. <a href="https://www.pnas.org/doi/10.1073/pnas.1915768117">https://www.pnas.org/doi/10.1073/pnas.1915768117</a></li>
-            <li id="ref-12">Bredin, H. <em>pyannote.audio 2.1 speaker diarization pipeline</em>. Interspeech 2023. <a href="https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html">https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html</a></li>
-            <li id="ref-13">Reimers, N. and Gurevych, I. <em>Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks</em>. <a href="https://arxiv.org/abs/1908.10084">https://arxiv.org/abs/1908.10084</a></li>
-            <li id="ref-14">Karpukhin, V. et al. <em>Dense Passage Retrieval for Open-Domain Question Answering</em>. <a href="https://arxiv.org/abs/2004.04906">https://arxiv.org/abs/2004.04906</a></li>
-            <li id="ref-15">Lewis, P. et al. <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</em>. <a href="https://arxiv.org/abs/2005.11401">https://arxiv.org/abs/2005.11401</a></li>
-            <li id="ref-16">Tang, L. et al. <em>TofuEval: Evaluating Hallucinations of LLMs on Topic-Focused Dialogue Summarization</em>. <a href="https://arxiv.org/abs/2402.13249">https://arxiv.org/abs/2402.13249</a></li>
-            <li id="ref-17">Deldjoo, Y. et al. <em>Fairness in recommender systems: research landscape and future directions</em>. <a href="https://link.springer.com/article/10.1007/s11257-023-09364-z">https://link.springer.com/article/10.1007/s11257-023-09364-z</a></li>
-            <li id="ref-18">Wang, C. et al. <em>VALL-E: Neural Codec Language Models are Zero-Shot Text to Speech Synthesizers</em>. <a href="https://arxiv.org/abs/2301.02111">https://arxiv.org/abs/2301.02111</a></li>
-            <li id="ref-19">Meta AI. <em>Voicebox: Text-Guided Multilingual Universal Speech Generation at Scale</em>. <a href="https://voicebox.metademolab.com/">https://voicebox.metademolab.com/</a></li>
-            <li id="ref-20">ElevenLabs. <em>AI Dubbing Studio</em>. <a href="https://elevenlabs.io/dubbing-studio">https://elevenlabs.io/dubbing-studio</a></li>
-            <li id="ref-21">Adobe Podcast. <em>Enhance Speech</em>. <a href="https://podcast.adobe.com/en/enhance">https://podcast.adobe.com/en/enhance</a></li>
-            <li id="ref-22">Deezer Research. <em>Spleeter: a fast and efficient music source separation tool</em>. <a href="https://research.deezer.com/publication/2020/06/24/releasing-spleeter.html">https://research.deezer.com/publication/2020/06/24/releasing-spleeter.html</a></li>
-            <li id="ref-23">Rouard, S., Massa, F. and Défossez, A. <em>Hybrid Transformers for Music Source Separation</em>. <a href="https://arxiv.org/abs/2211.08553">https://arxiv.org/abs/2211.08553</a></li>
-            <li id="ref-24">NIST. <em>Artificial Intelligence Risk Management Framework</em>. <a href="https://www.nist.gov/itl/ai-risk-management-framework">https://www.nist.gov/itl/ai-risk-management-framework</a></li>
-            <li id="ref-25">Knight First Amendment Institute. <em>Understanding Social Media Recommendation Algorithms</em>. <a href="https://knightcolumbia.org/content/understanding-social-media-recommendation-algorithms">https://knightcolumbia.org/content/understanding-social-media-recommendation-algorithms</a></li>
-            <li id="ref-26">European Commission. <em>The General-Purpose AI Code of Practice</em>. <a href="https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai">https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai</a></li>
-            <li id="ref-27">UK Government. <em>Report on Copyright and Artificial Intelligence</em>. <a href="https://www.gov.uk/government/publications/report-and-impact-assessment-on-copyright-and-artificial-intelligence/report-on-copyright-and-artificial-intelligence">https://www.gov.uk/government/publications/report-and-impact-assessment-on-copyright-and-artificial-intelligence/report-on-copyright-and-artificial-intelligence</a></li>
-            <li id="ref-28">U.S. Copyright Office. <em>Copyright and Artificial Intelligence</em>. <a href="https://www.copyright.gov/ai/">https://www.copyright.gov/ai/</a></li>
-            <li id="ref-29">Information Commissioner's Office. <em>Biometric data guidance: biometric recognition</em>. <a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/biometric-data-guidance-biometric-recognition/">https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/biometric-data-guidance-biometric-recognition/</a></li>
-            <li id="ref-30">Federal Trade Commission. <em>The FTC Voice Cloning Challenge</em>. <a href="https://www.ftc.gov/news-events/contests/ftc-voice-cloning-challenge">https://www.ftc.gov/news-events/contests/ftc-voice-cloning-challenge</a></li>
-            <li id="ref-31">European Union. <em>EU AI Act, Article 50: Transparency obligations for providers and deployers of certain AI systems</em>. <a href="https://artificialintelligenceact.eu/article/50/">https://artificialintelligenceact.eu/article/50/</a></li>
-          </ol>
-        </section>
-      </article>
-    </div>
+      <section class="chapter" id="conclusion">
+        <h2>5. Conclusion: AI Should Unlock Podcast Knowledge, Not Extract It</h2>
+
+        <h3 id="summary-ai-transformation">5.1 Summary of the AI Transformation</h3>
+        <p>Podcasting matters because it preserves forms of knowledge that short-form media often lose: long explanation, human voice, disagreement, uncertainty and trust. But these same qualities make podcasts hard to navigate. The audio black box limits search, access and discovery.</p>
+        <p>AI creates a knowledge pipeline: decode, structure and mediate. The first step is decoding. ASR and diarization turn speech into attributed, timestamped text. The second step is structuring. Semantic chunking, embeddings and vector search turn long transcripts into searchable knowledge units. The third step is mediation. RAG, summaries and recommendations help users ask questions, preview content and jump to relevant moments. Together, these technologies can make podcasts more useful as knowledge sources.</p>
+
+        <h3 id="crucial-choice">5.2 The Crucial Choice: Parasitic Extraction vs. Symbiotic Ecosystem</h3>
+        <p>In a <strong>parasitic system</strong>, platforms turn creators' voices into unpaid infrastructure for automated answers. Users receive convenient summaries, but creators lose attention, revenue and control. The podcast becomes raw material for platform-controlled knowledge extraction.</p>
+        <p>In a <strong>symbiotic ecosystem</strong>, AI helps people find, understand and return to human conversations. Transcripts are editable. Summaries cite timestamps. Recommendations are explainable. Creators can control AI uses of their work. Revenue flows back when AI interfaces monetise creator knowledge.</p>
+        <div class="thesis">In my opinion, AI should unlock podcast knowledge, not extract it. The future of podcast AI should be a symbiotic ecosystem not a parasitic system.</div>
+        <p>The argument of this blog is therefore simple: AI should make podcast listening more searchable, inclusive and rewarding, but it should not turn creators' work into free raw material for platform-controlled knowledge extraction.</p>
+      </section>
+
+      <section class="chapter refs" id="references">
+        <h2>References</h2>
+        <ol>
+          <li id="ref-1">Edison Research. (2025). <em>The Podcast Consumer 2025</em>. Available at: <a href="https://www.edisonresearch.com/the-podcast-consumer-2025/">https://www.edisonresearch.com/the-podcast-consumer-2025/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-2">DataReportal. (2025). <em>Digital 2025: Podcasts gaining popularity</em>. Available at: <a href="https://datareportal.com/reports/digital-2025-sub-section-podcasts-gain-popularity">https://datareportal.com/reports/digital-2025-sub-section-podcasts-gain-popularity</a> [Accessed 1 May 2026].</li>
+          <li id="ref-3">YouTube. (2025). <em>Celebrating 1 billion monthly podcast users on YouTube</em>. Available at: <a href="https://blog.youtube/news-and-events/1-billion-monthly-podcast-users/">https://blog.youtube/news-and-events/1-billion-monthly-podcast-users/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-4">Interactive Advertising Bureau and PwC. (2026). <em>Internet Advertising Revenue Report: Full Year 2025</em>. Available at: <a href="https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2025/">https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2025/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-5">Aziz, M., Wang, A., Pappu, A., Bouchard, H., Zhao, Y., Carterette, B. and Lalmas, M. (2021). Leveraging semantic information to facilitate the discovery of underserved podcasts. <em>Proceedings of the 30th ACM International Conference on Information &amp; Knowledge Management</em>. Available at: <a href="https://research.atspotify.com/publications/leveraging-semantic-information-to-facilitate-the-discovery-of-underserved-podcasts">https://research.atspotify.com/publications/leveraging-semantic-information-to-facilitate-the-discovery-of-underserved-podcasts</a> [Accessed 1 May 2026].</li>
+          <li id="ref-6">Apple. (2024). <em>Transcripts on Apple Podcasts</em>. Available at: <a href="https://podcasters.apple.com/support/5316-transcripts-on-apple-podcasts">https://podcasters.apple.com/support/5316-transcripts-on-apple-podcasts</a> [Accessed 1 May 2026].</li>
+          <li id="ref-7">Spotify. (n.d.). <em>Managing episode transcripts on Spotify</em>. Available at: <a href="https://support.spotify.com/us/creators/article/managing-episode-transcripts-on-spotify/">https://support.spotify.com/us/creators/article/managing-episode-transcripts-on-spotify/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-8">Spotify. (n.d.). <em>Episode chapters</em>. Available at: <a href="https://support.spotify.com/us/creators/article/episode-chapters/">https://support.spotify.com/us/creators/article/episode-chapters/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-9">Spotify. (2026). <em>Prompted Playlist levels up to include podcasts</em>. Available at: <a href="https://newsroom.spotify.com/2026-04-07/prompted-playlist-for-podcasts-launch/">https://newsroom.spotify.com/2026-04-07/prompted-playlist-for-podcasts-launch/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-10">Radford, A., Kim, J. W., Xu, T., Brockman, G., McLeavey, C. and Sutskever, I. (2023). Robust speech recognition via large-scale weak supervision. <em>Proceedings of the 40th International Conference on Machine Learning</em>. Available at: <a href="https://proceedings.mlr.press/v202/radford23a.html">https://proceedings.mlr.press/v202/radford23a.html</a> [Accessed 1 May 2026].</li>
+          <li id="ref-11">Baevski, A., Zhou, H., Mohamed, A. and Auli, M. (2020). wav2vec 2.0: A framework for self-supervised learning of speech representations. <em>Advances in Neural Information Processing Systems</em>. Available at: <a href="https://arxiv.org/abs/2006.11477">https://arxiv.org/abs/2006.11477</a> [Accessed 1 May 2026].</li>
+          <li id="ref-12">OpenAI. (2026). <em>Speech to text: OpenAI API documentation</em>. Available at: <a href="https://developers.openai.com/api/docs/guides/speech-to-text">https://developers.openai.com/api/docs/guides/speech-to-text</a> [Accessed 1 May 2026].</li>
+          <li id="ref-13">Bredin, H. (2023). pyannote.audio 2.1 speaker diarization pipeline: principle, benchmark, and recipe. <em>Proceedings of Interspeech 2023</em>. Available at: <a href="https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html">https://www.isca-archive.org/interspeech_2023/bredin23_interspeech.html</a> [Accessed 1 May 2026].</li>
+          <li id="ref-14">Apple Machine Learning Research. (2024). <em>Humanizing Word Error Rate for ASR Transcript Readability and Accessibility</em>. Available at: <a href="https://machinelearning.apple.com/research/humanizing-wer">https://machinelearning.apple.com/research/humanizing-wer</a> [Accessed 1 May 2026].</li>
+          <li id="ref-15">Ghazimatin, A., et al. (2024). PODTILE: Facilitating podcast episode browsing with auto-generated chapters. Available at: <a href="https://arxiv.org/abs/2410.16148">https://arxiv.org/abs/2410.16148</a> [Accessed 1 May 2026].</li>
+          <li id="ref-16">Reimers, N. and Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. <em>Proceedings of EMNLP-IJCNLP</em>. Available at: <a href="https://aclanthology.org/D19-1410/">https://aclanthology.org/D19-1410/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-17">Muennighoff, N., Tazi, N., Magne, L. and Reimers, N. (2023). MTEB: Massive text embedding benchmark. <em>Proceedings of the 17th Conference of the European Chapter of the Association for Computational Linguistics</em>. Available at: <a href="https://aclanthology.org/2023.eacl-main.148/">https://aclanthology.org/2023.eacl-main.148/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-18">Spotify Engineering. (2022). <em>Introducing Natural Language Search for Podcast Episodes</em>. Available at: <a href="https://engineering.atspotify.com/2022/03/introducing-natural-language-search-for-podcast-episodes">https://engineering.atspotify.com/2022/03/introducing-natural-language-search-for-podcast-episodes</a> [Accessed 1 May 2026].</li>
+          <li id="ref-19">Johnson, J., Douze, M. and Jegou, H. (2017). Billion-scale similarity search with GPUs. Available at: <a href="https://arxiv.org/abs/1702.08734">https://arxiv.org/abs/1702.08734</a> [Accessed 1 May 2026].</li>
+          <li id="ref-20">Wang, J., et al. (2021). Milvus: A purpose-built vector data management system. <em>Proceedings of the 2021 International Conference on Management of Data</em>. Available at: <a href="https://dl.acm.org/doi/10.1145/3448016.3457550">https://dl.acm.org/doi/10.1145/3448016.3457550</a> [Accessed 1 May 2026].</li>
+          <li id="ref-21">Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. <em>Advances in Neural Information Processing Systems</em>. Available at: <a href="https://arxiv.org/abs/2005.11401">https://arxiv.org/abs/2005.11401</a> [Accessed 1 May 2026].</li>
+          <li id="ref-22">Huang, L., et al. (2025). A survey on hallucination in large language models: principles, taxonomy, challenges, and open questions. <em>ACM Transactions on Information Systems, 43(2), Article 42, 1-55</em>. Available at: <a href="https://dl.acm.org/doi/10.1145/3703155">https://dl.acm.org/doi/10.1145/3703155</a> [Accessed 1 May 2026].</li>
+          <li id="ref-23">Rackauckas, Z. and Hirschberg, J. (2025). VoxRAG: A step toward transcription-free RAG systems in spoken question answering. Available at: <a href="https://arxiv.org/abs/2505.17326">https://arxiv.org/abs/2505.17326</a> [Accessed 1 May 2026].</li>
+          <li id="ref-24">LangChain. (2026). <em>Retrieval</em>. Available at: <a href="https://docs.langchain.com/oss/python/langchain/retrieval">https://docs.langchain.com/oss/python/langchain/retrieval</a> [Accessed 1 May 2026].</li>
+          <li id="ref-25">LlamaIndex. (2026). <em>Introduction to RAG</em>. Available at: <a href="https://developers.llamaindex.ai/python/framework/understanding/rag/">https://developers.llamaindex.ai/python/framework/understanding/rag/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-26">Koenecke, A., Nam, A., Lake, E., Nudell, J., Quartey, M., Mengesha, Z., Toups, C., Rickford, J. R., Jurafsky, D. and Goel, S. (2020). Racial disparities in automated speech recognition. <em>Proceedings of the National Academy of Sciences</em>, 117(14), 7684-7689. Available at: <a href="https://www.pnas.org/doi/10.1073/pnas.1915768117">https://www.pnas.org/doi/10.1073/pnas.1915768117</a> [Accessed 1 May 2026].</li>
+          <li id="ref-27">Bain &amp; Company. (2025). <em>Goodbye clicks, hello AI: Zero-click search redefines marketing</em>. Available at: <a href="https://www.bain.com/insights/goodbye-clicks-hello-ai-zero-click-search-redefines-marketing/">https://www.bain.com/insights/goodbye-clicks-hello-ai-zero-click-search-redefines-marketing/</a> [Accessed 1 May 2026].</li>
+          <li id="ref-28">Associated Press. (2026). <em>UK proposes forcing Google to let publishers opt out of AI summaries</em>. Available at: <a href="https://apnews.com/article/f2bf8545f3b987aa1900a829c0d01390">https://apnews.com/article/f2bf8545f3b987aa1900a829c0d01390</a> [Accessed 1 May 2026].</li>
+          <li id="ref-29">World Intellectual Property Organization. (n.d.). <em>Copyright</em>. Available at: <a href="https://www.wipo.int/en/web/copyright">https://www.wipo.int/en/web/copyright</a> [Accessed 1 May 2026].</li>
+          <li id="ref-30">GOV.UK. (n.d.). <em>How copyright protects your work</em>. Available at: <a href="https://www.gov.uk/copyright">https://www.gov.uk/copyright</a> [Accessed 1 May 2026].</li>
+        </ol>
+      </section>
+    </article>
   </main>
 
   <footer class="footer">
-    <p>Prepared as an online blog version of the report. Replace this footer with your hosting link and any required course details. Do not add your name if your submission rules require only a student number.</p>
+    <p>Online version: <a href="https://jkk9527.github.io/">https://jkk9527.github.io/</a>. This page is prepared as the web version of the report and intentionally uses only the student number shown above.</p>
   </footer>
-  <button class="backtop" id="backtop" aria-label="Back to top">↑</button>
+
+  <button class="backtop" id="backtop" type="button" aria-label="Back to top">↑</button>
 
   <script>
-    function onReady(fn){
-      if(document.readyState !== 'loading') fn();
-      else document.addEventListener('DOMContentLoaded', fn);
+    function onReady(fn) {
+      if (document.readyState !== "loading") fn();
+      else document.addEventListener("DOMContentLoaded", fn);
     }
 
-    onReady(function(){
-      const progress = document.getElementById('progress');
-      const backtop = document.getElementById('backtop');
-      function updateProgress(){
+    onReady(function () {
+      const progress = document.getElementById("progress");
+      const backtop = document.getElementById("backtop");
+      const navLinks = Array.from(document.querySelectorAll(".navlinks a, .toc a"));
+      const sections = Array.from(document.querySelectorAll("main .chapter, main h3[id]"));
+
+      function updateProgress() {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - window.innerHeight;
         const pct = height > 0 ? (scrollTop / height) * 100 : 0;
-        progress.style.width = pct + '%';
-        backtop.classList.toggle('show', scrollTop > 700);
+        progress.style.width = pct + "%";
+        backtop.classList.toggle("show", scrollTop > 720);
       }
-      window.addEventListener('scroll', updateProgress, {passive:true});
-      backtop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      backtop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
       updateProgress();
 
-      const chartEls = document.querySelectorAll('.chart');
+      const activeObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.getAttribute("id");
+          navLinks.forEach((link) => {
+            link.classList.toggle("active", link.getAttribute("href") === "#" + id);
+          });
+        });
+      }, { rootMargin: "-35% 0px -55% 0px", threshold: 0.01 });
+      sections.forEach((section) => activeObserver.observe(section));
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reduceMotion && "IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.animate(
+              [
+                { opacity: 0, transform: "translateY(18px)" },
+                { opacity: 1, transform: "translateY(0)" }
+              ],
+              { duration: 560, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" }
+            );
+            revealObserver.unobserve(entry.target);
+          });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll(".chapter, .figure, .chart-card, .stat, .mini-card, .risk-card").forEach((el) => {
+          el.style.opacity = "0.001";
+          revealObserver.observe(el);
+        });
+      }
+
       const charts = [];
-      const chartRegistry = {};
-      function initChart(id, option){
+      const commonText = { fontFamily: "Inter, system-ui, -apple-system, Segoe UI, sans-serif", color: "#303833" };
+
+      function chartFallback(id, text) {
         const el = document.getElementById(id);
-        if(!el || typeof echarts === 'undefined') return;
-        const chart = echarts.init(el, null, {renderer:'canvas'});
+        if (!el) return;
+        el.classList.add("chart-fallback");
+        el.textContent = text || "Interactive chart could not load. The surrounding text contains the same evidence.";
+      }
+
+      function initChart(id, option) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (typeof echarts === "undefined") {
+          chartFallback(id);
+          return;
+        }
+        const chart = echarts.init(el, null, { renderer: "canvas" });
         chart.setOption(option);
-        chartRegistry[id] = chart;
         charts.push(chart);
       }
 
-      function triggerDownload(source, filename){
-        const link = document.createElement('a');
-        link.href = source;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      }
-
-      function addFigureDownload(container, filename, getSource){
-        if(!container || container.querySelector(':scope > .figure-download')) return;
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'figure-download';
-        button.textContent = '下载图片';
-        button.setAttribute('aria-label', `下载图片 ${filename}`);
-        button.addEventListener('click', () => {
-          const source = getSource();
-          if(source) triggerDownload(source, filename);
-        });
-        container.appendChild(button);
-      }
-
-      function addChartDownload(chartId, filename){
-        const el = document.getElementById(chartId);
-        addFigureDownload(el && el.closest('.chart-card'), filename, () => {
-          const chart = chartRegistry[chartId];
-          return chart ? chart.getDataURL({type:'png', pixelRatio:3, backgroundColor:'#ffffff'}) : '';
-        });
-      }
-
-      const commonText = {fontFamily:'system-ui, -apple-system, Segoe UI, sans-serif'};
-      const tooltip = {trigger:'axis', axisPointer:{type:'shadow'}, confine:true};
-
-      initChart('chart-audience', {
+      initChart("chart-scale", {
         textStyle: commonText,
-        tooltip: {trigger:'item', confine:true, formatter: '{b}: {c}%'},
-        grid:{left:42,right:18,top:30,bottom:40},
-        xAxis:{type:'category', data:['Monthly\npodcast use','Weekly\npodcast use','Both listened\nand watched'], axisTick:{show:false}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        yAxis:{type:'value', max:80, axisLabel:{formatter:'{value}%'}, splitLine:{lineStyle:{color:'#eee7dc'}}},
-        series:[{
-          type:'bar', data:[58,45,57], barWidth:'46%',
-          itemStyle:{borderRadius:[10,10,0,0], color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#6d47ff'},{offset:1,color:'#00a88f'}])},
-          label:{show:true, position:'top', formatter:'{c}%', fontWeight:800}
-        }]
-      });
-
-      initChart('chart-market', {
-        textStyle: commonText,
-        tooltip:{trigger:'axis', confine:true, valueFormatter:v => '$' + v + 'bn'},
-        grid:{left:50,right:18,top:35,bottom:44},
-        xAxis:{type:'category', boundaryGap:false, data:['2024','2025','2026','2027','2028','2029','2030'], axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        yAxis:{type:'value', axisLabel:{formatter:'${value}bn'}, splitLine:{lineStyle:{color:'#eee7dc'}}},
-        series:[{
-          name:'Global podcasting market', type:'line', smooth:true, symbolSize:9,
-          data:[30.72,39.01,49.54,62.92,79.91,101.49,131.13],
-          lineStyle:{width:4, color:'#6d47ff'}, itemStyle:{color:'#6d47ff'},
-          areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(109,71,255,.28)'},{offset:1,color:'rgba(109,71,255,.02)'}])},
-          label:{show:true, position:'top', formatter:p => p.dataIndex === 0 || p.dataIndex === 6 ? '$'+p.data+'bn' : ''}
-        }]
-      });
-
-      initChart('chart-access', {
-        textStyle: commonText,
-        tooltip:{trigger:'axis', confine:true, valueFormatter:v => v + ' million people'},
-        grid:{left:58,right:20,top:25,bottom:38},
-        xAxis:{type:'category', data:['Current\nneed','Projected\n2050'], axisTick:{show:false}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        yAxis:{type:'value', axisLabel:{formatter:'{value}m'}, splitLine:{lineStyle:{color:'#eee7dc'}}},
-        series:[{
-          type:'bar', barWidth:'42%', data:[430,700],
-          itemStyle:{borderRadius:[10,10,0,0], color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#ff8b3d'},{offset:1,color:'#6d47ff'}])},
-          label:{show:true, position:'top', formatter:'{c}m', fontWeight:800}
-        }]
-      });
-
-      initChart('chart-transcript', {
-        textStyle: commonText,
-        tooltip:{trigger:'item', confine:true, formatter:p => p.name + ': ' + p.value + 'm episodes'},
-        legend:{bottom:0},
-        series:[{
-          type:'pie', radius:['52%','76%'], center:['50%','46%'], avoidLabelOverlap:true,
-          data:[
-            {name:'Episodes with Podcasting 2.0 transcripts', value:5.3, itemStyle:{color:'#6d47ff'}},
-            {name:'Other indexed episodes', value:156.7, itemStyle:{color:'#ded7c9'}}
-          ],
-          label:{formatter:p => p.name.indexOf('transcripts') > -1 ? 'Transcript metadata\n≈3.3%' : '', fontWeight:800, color:'#171717'},
-          emphasis:{scale:true, scaleSize:8}
-        }]
-      });
-
-      initChart('chart-pipeline', {
-        textStyle: commonText,
-        tooltip:{trigger:'item', triggerOn:'mousemove', confine:true},
-        series:[{
-          type:'sankey', left:10, right:14, top:10, bottom:10, nodeGap:14, nodeWidth:18,
-          emphasis:{focus:'adjacency'},
-          data:[
-            {name:'Raw audio'}, {name:'Noise reduction'}, {name:'ASR transcript'}, {name:'Speaker labels'},
-            {name:'Semantic chunks'}, {name:'Vector database'}, {name:'RAG answers'}, {name:'Summaries'},
-            {name:'Recommendations'}, {name:'Translations'}
-          ],
-          links:[
-            {source:'Raw audio',target:'Noise reduction',value:6},
-            {source:'Noise reduction',target:'ASR transcript',value:6},
-            {source:'ASR transcript',target:'Speaker labels',value:5},
-            {source:'Speaker labels',target:'Semantic chunks',value:5},
-            {source:'Semantic chunks',target:'Vector database',value:4},
-            {source:'Vector database',target:'RAG answers',value:2},
-            {source:'Semantic chunks',target:'Summaries',value:2},
-            {source:'Semantic chunks',target:'Recommendations',value:2},
-            {source:'ASR transcript',target:'Translations',value:2}
-          ],
-          lineStyle:{color:'gradient', curveness:.5},
-          itemStyle:{borderWidth:1, borderColor:'#fff'},
-          levels:[
-            {depth:0,itemStyle:{color:'#171717'}},
-            {depth:1,itemStyle:{color:'#6d47ff'}},
-            {depth:2,itemStyle:{color:'#00a88f'}},
-            {depth:3,itemStyle:{color:'#ff8b3d'}},
-            {depth:4,itemStyle:{color:'#223a5e'}}
-          ]
-        }]
-      });
-
-      initChart('chart-vector', {
-        textStyle: commonText,
-        tooltip:{trigger:'item', confine:true, formatter:p => p.seriesName + '<br/>' + p.data[2]},
-        grid:{left:36,right:20,top:20,bottom:34},
-        xAxis:{name:'semantic dimension 1', splitLine:{lineStyle:{color:'#eee7dc'}}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        yAxis:{name:'semantic dimension 2', splitLine:{lineStyle:{color:'#eee7dc'}}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        series:[
-          {name:'Podcast chunks', type:'scatter', symbolSize:14, data:[[1,6,'carbon pricing'],[1.5,5.8,'emissions policy'],[2.1,6.3,'revenue recycling'],[7,2,'celebrity interview'],[6.3,1.7,'sports discussion'],[2.4,5.4,'climate tax politics'],[8,6,'music review']], itemStyle:{color:'#00a88f'}},
-          {name:'User query', type:'scatter', symbol:'diamond', symbolSize:24, data:[[1.8,5.9,'query: why carbon taxes are politically difficult']], itemStyle:{color:'#6d47ff'}, label:{show:true, formatter:'User query', position:'top', fontWeight:800}}
-        ]
-      });
-
-      initChart('chart-radar', {
-        textStyle: commonText,
-        tooltip:{confine:true},
-        legend:{bottom:0},
-        radar:{
-          radius:'62%',
-          indicator:[
-            {name:'Searchability', max:5}, {name:'Accessibility', max:5}, {name:'Global reach', max:5},
-            {name:'Creator productivity', max:5}, {name:'Ethical risk', max:5}
-          ],
-          splitLine:{lineStyle:{color:'#eee7dc'}}, splitArea:{areaStyle:{color:['rgba(109,71,255,.04)','rgba(0,168,143,.03)']}}, axisLine:{lineStyle:{color:'#d8d0c1'}}
+        tooltip: {
+          trigger: "axis",
+          axisPointer: { type: "shadow" },
+          confine: true,
+          formatter: function (params) {
+            const p = params[0];
+            return "<strong>" + p.name + "</strong><br/>" + p.value + "%";
+          }
         },
-        series:[{
-          type:'radar', data:[
-            {name:'ASR + diarization', value:[5,5,2,3,3], areaStyle:{opacity:.12}, lineStyle:{width:3}, itemStyle:{color:'#6d47ff'}},
-            {name:'RAG summary/search', value:[5,3,3,4,4], areaStyle:{opacity:.10}, lineStyle:{width:3}, itemStyle:{color:'#00a88f'}},
-            {name:'AI dubbing', value:[2,4,5,4,5], areaStyle:{opacity:.10}, lineStyle:{width:3}, itemStyle:{color:'#ff8b3d'}}
+        grid: { left: 52, right: 18, top: 28, bottom: 56 },
+        xAxis: {
+          type: "category",
+          data: ["US ever\nconsumed", "US monthly", "US weekly", "Global weekly\nonline adults"],
+          axisTick: { show: false },
+          axisLine: { lineStyle: { color: "#ded5c7" } }
+        },
+        yAxis: {
+          type: "value",
+          max: 80,
+          axisLabel: { formatter: "{value}%" },
+          splitLine: { lineStyle: { color: "#eee6da" } }
+        },
+        series: [{
+          name: "Podcast adoption",
+          type: "bar",
+          barWidth: "46%",
+          data: [73, 55, 40, 22.1],
+          itemStyle: {
+            borderRadius: [10, 10, 0, 0],
+            color: function (p) {
+              return ["#0e8f7e", "#2d5ea8", "#e79635", "#bf536b"][p.dataIndex];
+            }
+          },
+          label: { show: true, position: "top", formatter: "{c}%", fontWeight: 850 }
+        }]
+      });
+
+      initChart("chart-pipeline", {
+        textStyle: commonText,
+        tooltip: { trigger: "item", triggerOn: "mousemove", confine: true },
+        series: [{
+          type: "sankey",
+          left: 10,
+          right: 150,
+          top: 12,
+          bottom: 12,
+          nodeGap: 14,
+          nodeWidth: 18,
+          emphasis: { focus: "adjacency" },
+          label: { fontSize: 12, color: "#21313a", overflow: "break", width: 132 },
+          data: [
+            { name: "Raw audio" },
+            { name: "ASR transcript" },
+            { name: "Speaker labels" },
+            { name: "Semantic chunks" },
+            { name: "Vector index" },
+            { name: "Grounded answers" },
+            { name: "Chapter summaries" },
+            { name: "Recommendations" },
+            { name: "Moderation flags" }
+          ],
+          links: [
+            { source: "Raw audio", target: "ASR transcript", value: 8 },
+            { source: "ASR transcript", target: "Speaker labels", value: 6 },
+            { source: "Speaker labels", target: "Semantic chunks", value: 6 },
+            { source: "Semantic chunks", target: "Vector index", value: 4 },
+            { source: "Vector index", target: "Grounded answers", value: 2 },
+            { source: "Semantic chunks", target: "Chapter summaries", value: 2 },
+            { source: "Semantic chunks", target: "Recommendations", value: 2 },
+            { source: "Semantic chunks", target: "Moderation flags", value: 1.5 }
+          ],
+          lineStyle: { color: "gradient", curveness: .5 },
+          itemStyle: { borderWidth: 1, borderColor: "#fff" },
+          levels: [
+            { depth: 0, itemStyle: { color: "#21313a" } },
+            { depth: 1, itemStyle: { color: "#2d5ea8" } },
+            { depth: 2, itemStyle: { color: "#0e8f7e" } },
+            { depth: 3, itemStyle: { color: "#e79635" } },
+            { depth: 4, itemStyle: { color: "#bf536b" } }
           ]
         }]
       });
 
-      initChart('chart-fairness', {
-        textStyle: commonText,
-        tooltip:{trigger:'item', confine:true, formatter:p => '<strong>'+p.data[2]+'</strong><br/>Relevance: '+p.data[0]+'<br/>Exposure fairness: '+p.data[1]},
-        grid:{left:48,right:24,top:20,bottom:48},
-        xAxis:{min:0,max:10,name:'User relevance', splitLine:{lineStyle:{color:'#eee7dc'}}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        yAxis:{min:0,max:10,name:'Creator exposure fairness', splitLine:{lineStyle:{color:'#eee7dc'}}, axisLine:{lineStyle:{color:'#d8d0c1'}}},
-        graphic:[
-          {type:'text', left:'67%', top:'10%', style:{text:'Ideal:\nrelevant + fair', fill:'#00a88f', fontWeight:800}},
-          {type:'text', left:'62%', top:'72%', style:{text:'Popularity lock-in', fill:'#ff8b3d', fontWeight:800}},
-          {type:'text', left:'10%', top:'15%', style:{text:'Diverse but\nlow relevance', fill:'#6d47ff', fontWeight:800}},
-          {type:'text', left:'10%', top:'72%', style:{text:'Worst case:\nopaque ranking', fill:'#555', fontWeight:800}}
-        ],
-        series:[{
-          type:'scatter', symbolSize:28,
-          data:[[8.5,8.6,'Semantic recommendation with diversity'],[8.2,2.4,'Popularity-driven ranking'],[3.2,7.7,'Unpersonalised diversity push'],[2.5,2.2,'Opaque low-quality ranking'],[6.5,6.2,'Balanced hybrid model']],
-          itemStyle:{color:p => ['#00a88f','#ff8b3d','#6d47ff','#555','#223a5e'][p.dataIndex]}
-        }]
+      let resizeFrame = null;
+      window.addEventListener("resize", () => {
+        window.cancelAnimationFrame(resizeFrame);
+        resizeFrame = window.requestAnimationFrame(() => charts.forEach((chart) => chart.resize()));
       });
-
-      addFigureDownload(document.querySelector('.hero-card'), 'audio-blackbox-to-knowledge.png', () => 'figures/audio-blackbox-to-knowledge.png');
-      addFigureDownload(document.querySelector('.flow[aria-label="Podcast AI pipeline"]'), 'podcast-ai-flow.png', () => 'figures/podcast-ai-flow.png');
-      addChartDownload('chart-audience', 'chart-audience.png');
-      addChartDownload('chart-market', 'chart-market.png');
-      addChartDownload('chart-access', 'chart-access.png');
-      addChartDownload('chart-transcript', 'chart-transcript.png');
-      addChartDownload('chart-pipeline', 'chart-pipeline.png');
-      addChartDownload('chart-vector', 'chart-vector.png');
-      addChartDownload('chart-radar', 'chart-radar.png');
-      addChartDownload('chart-fairness', 'chart-fairness.png');
-
-      window.addEventListener('resize', () => charts.forEach(c => c.resize()));
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){ entry.target.animate([{opacity:0, transform:'translateY(16px)'},{opacity:1, transform:'translateY(0)'}], {duration:500, easing:'ease-out', fill:'forwards'}); observer.unobserve(entry.target); }
-        });
-      }, {threshold:.08});
-      document.querySelectorAll('section.card, .chart-card, .stat').forEach(el => { el.style.opacity=.001; observer.observe(el); });
     });
   </script>
 </body>
