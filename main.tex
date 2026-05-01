@@ -59,15 +59,15 @@
 \usepackage{parskip} % 自动取消缩进并增加段间距
 \begin{document}
 
-\noindent\textbf{Online version:} \url{https://jkk9527.github.io/}
+\noindent\textbf{Online version:}\footnote{This is the required online version of the same submitted blog and may be identified as a self-match in automated similarity reports.} \url{https://jkk9527.github.io/}
 
 \vspace{1.2em}
 
 \begin{center}
 \begin{minipage}{0.96\textwidth}
 \centering
-{\LARGE\bfseries\setstretch{1.18}\selectfont
-Unlocking the Audio Black Box: How AI Turns Podcasts into Searchable Knowledge and Who Benefits?\par}
+{\fontsize{15.5}{19}\selectfont\bfseries
+Unlocking the Audio Black Box: How AI Turns Podcasts \\ into Searchable Knowledge and Who Benefits?\par}
 \end{minipage}
 
 \vspace{0.8em}
@@ -154,9 +154,22 @@ For knowledge work, this is both powerful and awkward. The medium fits daily lif
 
 \subsubsection{The Scale of the Industry}
 
-The scale of podcasting shows why this problem matters. Edison Research reported in \textit{The Podcast Consumer 2025} that 73\% of Americans aged 12 or older had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week \cite{Edison2025}. Globally, DataReportal reported that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{DataReportal2025}. YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem \cite{YouTube2025}. These figures matter because they show that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium.
+The scale of podcasting shows why this problem matters. As Figure~\ref{fig:podcast-adoption} shows, Edison Research reported in \textit{The Podcast Consumer 2025} that 73\% of Americans aged 12 or older had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week \cite{Edison2025}. The same report estimated that total time spent with podcasts among Americans aged 13 or older had grown to 773 million hours per week \cite{Edison2025}. Globally, DataReportal reported that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{DataReportal2025}. The podcast use is now widespread enough that podcast search is no longer a niche usability problem. It is an infrastructure problem for a large-scale knowledge medium.YouTube also announced in 2025 that it had more than one billion monthly active viewers of podcast content, showing how video platforms have become part of the podcast ecosystem \cite{YouTube2025}.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.96\linewidth]{figures/adoption.png}
+\caption[Podcasting as a mainstream knowledge medium]{
+\textbf{Podcasting is now a mainstream knowledge medium.}
+The first three bars show U.S. podcast adoption among people aged 12 or older: 73\% had ever consumed a podcast, 55\% had consumed one in the last month, and 40\% had consumed one in the last week. The final bar shows DataReportal's global figure that 22.1\% of online adults listened to at least one podcast each week in 2025 \cite{Edison2025,DataReportal2025}. Because these measures use different populations, the bars should be read as adoption signals rather than as directly comparable survey results.
+}
+\label{fig:podcast-adoption}
+\end{figure}
+
+
 
 The commercial market has grown as well. According to the IAB/PwC \textit{Internet Advertising Revenue Report: Full Year 2025}, U.S. podcast advertising revenue reached \$2.9 billion in 2025 \cite{IAB2026}. These numbers are measured differently across audio podcasts, video podcasts and streaming talk shows, but they point in the same direction: podcasting is no longer a niche format. It is a large media and knowledge industry.
+
 
 \subsection{Three Bottlenecks in Podcast Knowledge Access}
 
@@ -412,7 +425,7 @@ Copyright law already recognises that creators have rights over the expression o
 
 \subsection{Summary of the Ethics-to-Responsible Design Mapping}
 
-Three risks require three responses: accuracy requires evidence; fairness requires explainability; ownership requires consent and compensation. Table~\ref{tab:ethics-design} summarises this mapping. Figure~\ref{fig:governance-loop} then shows the larger design principle: responsible podcast AI should guide users back to the original conversation.
+Three risks require three responses: accuracy requires evidence; fairness requires explainability; ownership requires consent and compensation. Table~\ref{tab:ethics-design} summarises this mapping.
 
 \begin{table}[htbp]
 \centering
@@ -431,11 +444,6 @@ Ownership and value extraction & AI answers replace listening while platforms ca
 \caption{Mapping ethical risks to responsible podcast AI design.}
 \label{tab:ethics-design}
 \end{table}
-
-\placeholderfigure
-{fig:governance-loop}
-{Responsible podcast AI as a bridge back to original listening}
-{In the online version, draw a loop from user question to AI answer, timestamped evidence, original audio playback and creator attribution or revenue.}
 
 
 
@@ -457,8 +465,6 @@ In a \textbf{symbiotic ecosystem}, AI helps people find, understand and return t
 
 
 In my opinion, AI should unlock podcast knowledge, not extract it. The future of podcast AI should be a symbiotic ecosystem not a parasitic system. The argument of this blog is therefore simple: AI should make podcast listening more searchable, inclusive and rewarding, but it should not turn creators' work into free raw material for platform-controlled knowledge extraction.
-
-\newpage
 
 \begin{thebibliography}{99}
 
